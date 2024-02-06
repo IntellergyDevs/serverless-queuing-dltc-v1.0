@@ -1,0 +1,80 @@
+/* User.css */
+.data-grid-container {
+  height: 400px;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.data-grid {
+  border: 2px solid #FED100;
+  border-radius: 10px;
+}
+
+/* Header styles */
+.MuiDataGrid-columnHeaders {
+  background-color: #00539F;
+  color: #FED100;
+  font-size: 18px;
+}
+
+/* Cell styles */
+.MuiDataGrid-cell {
+  border-color: #FED100;
+}
+
+/* Row hover styles */
+.MuiDataGrid-row:hover {
+  background-color: #FED100;
+  opacity: 0.5;
+}
+
+/* Pagination styles */
+.MuiPaginationItem-root {
+  color: #00539F;
+}
+
+/* Button styles for 'Add User' */
+.add-user-button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #FED100;
+  color: #00539F;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 30px;
+}
+
+.add-user-button:hover {
+  background-color: #fcbf2c;
+}
+
+/* Sign Out Button styles */
+.sign-out-button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #00539F;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sign-out-button:hover {
+  background-color: #003d7a;
+}
+
+/* Delete Button styles within DataGrid */
+.delete-button {
+  background-color: #ef5350;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f;
+}
