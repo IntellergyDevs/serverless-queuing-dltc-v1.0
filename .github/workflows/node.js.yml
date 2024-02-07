@@ -22,7 +22,8 @@ jobs:
         with:
           node-version: '16'
           check-latest: true
-      - run: npm ci
+      - run: npm install
+
       - run: npm testt
 
   sonarqube-scan:
