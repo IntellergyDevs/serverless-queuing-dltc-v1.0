@@ -27,7 +27,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
   );
 };
 
-const FAQ: React.FC<FAQProps> = () => {
+const Faq: React.FC<FAQProps> = () => {
   return (
     <div className="faq-page">
       <h1 className="faq-title">Frequently Asked Questions (FAQs)</h1>
@@ -75,4 +75,4 @@ const FAQ: React.FC<FAQProps> = () => {
   );
 };
 
-export default FAQ;
+export default Faq;
