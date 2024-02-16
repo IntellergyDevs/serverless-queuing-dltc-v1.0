@@ -21,6 +21,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        ref: 'refs/heads/dev'  # Specify the branch to checkout
+        path: 'frontend'      # Specify the directory to checkout
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
