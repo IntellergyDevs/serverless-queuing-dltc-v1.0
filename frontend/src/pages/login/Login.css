@@ -2,6 +2,10 @@
     background-color: #e0e5ec; /* Neumorphic designs often use soft, light colors */
     width: 100dvw;
     height: 100dvh;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    
 }
 
 .registration-form form {
@@ -39,12 +43,28 @@
     box-shadow: inset 6px 6px 10px #a3b1c6, inset -6px -6px 10px #ffffff;
 }
 
+.registration-form .forgot-password {
+    border: none;
+    background-color: transparent;
+    color: #5891ff; /* Match the color used for the form icon */
+    font-size: 16px;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.registration-form .forgot-password:hover {
+    color: #4167aa; /* Darker shade on hover */
+}
+
+
+
 .registration-form .create-account {
     border-radius: 30px;
     padding: 10px 20px;
     font-size: 18px;
     font-weight: bold;
-    background-color: #5791ff;
+    background-color: #9d8b57;
     border: none;
     color: white;
     margin-top: 20px;
@@ -52,17 +72,36 @@
     box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
 }
 
-/* ...rest of your CSS... */
 
 @media (max-width: 576px) {
     .registration-form form {
         padding: 50px 20px;
     }
 
-    .registration-form .form-icon {
+.registration-form .form-icon 
+{
         width: 70px;
         height: 70px;
         font-size: 30px;
         line-height: 70px;
     }
 }
+
+.welcome-area h2
+ {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #004990
+  }
+  
+.welcome-image 
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 30%;
+    height: auto;
+    margin-bottom: 30px;
+  }
+  
+  

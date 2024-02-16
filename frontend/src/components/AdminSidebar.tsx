@@ -1,35 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { IconType } from "react-icons";
-import { AiFillFileText } from "react-icons/ai";
-import {
-  FaChartBar,
-  FaChartLine,
-  FaChartPie,
-  FaGamepad,
-  FaStopwatch,
-} from "react-icons/fa";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { IoIosPeople } from "react-icons/io";
-import {
-  RiCoupon3Fill,
-  RiDashboardFill,
-  RiShoppingBag3Fill,
-} from "react-icons/ri";
-import { Link, Location, useLocation } from "react-router-dom";
+import { RiDashboardFill } from "react-icons/ri";
+import { Link, useLocation } from "react-router-dom";
+import { Location } from 'history';
 
-const AdminSidebar = () => {
+interface UserRoleProps {
+  userRole: string;
+}
+
+const AdminSidebar = ({ userRole }: UserRoleProps) => {
   const location = useLocation();
-
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [phoneActive, setPhoneActive] = useState<boolean>(
-    window.innerWidth < 1100
-  );
-
-  const resizeHandler = () => {
-    setPhoneActive(window.innerWidth < 1100);
-  };
+  const [showDrawer, setShowDrawer] = useState<boolean>(false);
+  const [roleBasedTabs, setRoleBasedTabs] = useState<{ url: string; text: string; Icon: IconType }[]>([]);
 
   useEffect(() => {
+    const resizeHandler = () => {
+      setShowDrawer(false); // Close the drawer when resizing
+    };
+
     window.addEventListener("resize", resizeHandler);
 
     return () => {
@@ -37,35 +27,72 @@ const AdminSidebar = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Define role-based tabs based on the user's role
+    let tabs: { url: string; text: string; Icon: IconType }[] = [];
+    switch (userRole) {
+      case "examiner":
+        tabs = [
+          { url: "/admin/dashboard", text: "Dashboard", Icon: RiDashboardFill },
+          { url: "/admin/agent", text: "Ticket Management", Icon: RiDashboardFill },
+          { url: "/admin/user", text: "Examiners", Icon: IoIosPeople },
+        ];
+        break;
+      case "admin":
+        tabs = [
+          { url: "/admin/dashboard", text: "Dashboard", Icon: RiDashboardFill },
+          { url: "/admin/agent", text: "Ticket Management", Icon: RiDashboardFill },
+          { url: "/admin/user", text: "Examiners", Icon: IoIosPeople },
+        ];
+        break;
+      case "sAdmin":
+        tabs = [
+          { url: "/admin/dashboard", text: "Dashboard", Icon: RiDashboardFill },
+          { url: "/admin/agent", text: "Ticket Management", Icon: RiDashboardFill },
+          { url: "/admin/user", text: "Examiners", Icon: IoIosPeople },
+
+        ];
+        break;
+      case "finance":
+        tabs = [
+          { url: "/admin/dashboard", text: "Dashboard", Icon: RiDashboardFill },
+          // { url: "/admin/agent", text: "Ticket Management", Icon: RiDashboardFill },
+          // { url: "/admin/user", text: "Examiners", Icon: IoIosPeople },
+        ];
+        break;
+      default:
+        break;
+    }
+    setRoleBasedTabs(tabs);
+  }, [userRole]);
+
   return (
     <>
-      {phoneActive && (
-        <button id="hamburger" onClick={() => setShowModal(true)}>
-          <HiMenuAlt4 />
-        </button>
+      <button id="hamburger" onClick={() => setShowDrawer(true)}>
+        <HiMenuAlt4 />
+      </button>
+
+      {showDrawer && (
+        <div className="overlay" onClick={() => setShowDrawer(false)}></div>
       )}
 
       <aside
-        style={
-          phoneActive
-            ? {
-                width: "20rem",
-                height: "100vh",
-                position: "fixed",
-                top: 0,
-                left: showModal ? "0" : "-20rem",
-                transition: "all 0.5s",
-              }
-            : {}
-        }
+        className={showDrawer ? "open" : ""}
+        style={{
+          width: "20rem",
+          height: "100vh",
+          position: "fixed",
+          top: 0,
+          left: showDrawer ? "0" : "-20rem",
+          transition: "all 0.5s",
+        }}
       >
-        <h2>Logo.</h2>
-        <DivOne location={location} />
-        {/* <DivTwo location={location} /> */}
-        {/* <DivThree location={location} /> */}
+        <h2><img src="https://dltccoffeeimages.s3.amazonaws.com/new_logo_dltc.png" alt="Logo" className="logo" loading='lazy' width={80} height={80} /></h2>
+        
+        <DivOne location={location} roleBasedTabs={roleBasedTabs} />
 
-        {phoneActive && (
-          <button id="close-sidebar" onClick={() => setShowModal(false)}>
+        {showDrawer && (
+          <button id="close-sidebar" onClick={() => setShowDrawer(false)}>
             Close
           </button>
         )}
@@ -74,89 +101,16 @@ const AdminSidebar = () => {
   );
 };
 
-const DivOne = ({ location }: { location: Location }) => (
+const DivOne = ({ location, roleBasedTabs }: { location: Location; roleBasedTabs: { url: string; text: string; Icon: IconType }[] }) => (
   <div>
     <h5>Dashboard</h5>
     <ul>
-      <Li
-        url="/admin/dashboard"
-        text="Dashboard"
-        Icon={RiDashboardFill}
-        location={location}
-      />
-      <Li
-        url="/admin/product"
-        text="Examiners"
-        Icon={IoIosPeople}
-        location={location}
-      />
-      <Li
-        url="/admin/customer"
-        text="Centers"
-        Icon={IoIosPeople}
-        location={location}
-      />
-      <Li
-        url="/admin/transaction"
-        text="Transaction"
-        Icon={AiFillFileText}
-        location={location}
-      />
+      {roleBasedTabs.map(tab => (
+        <Li key={tab.url} url={tab.url} text={tab.text} Icon={tab.Icon} location={location} />
+      ))}
     </ul>
   </div>
 );
-
-// const DivTwo = ({ location }: { location: Location }) => (
-//   <div>
-//     <h5>Charts</h5>
-//     <ul>
-//       <Li
-//         url="/admin/chart/bar"
-//         text="Bar"
-//         Icon={FaChartBar}
-//         location={location}
-//       />
-//       <Li
-//         url="/admin/chart/pie"
-//         text="Pie"
-//         Icon={FaChartPie}
-//         location={location}
-//       />
-//       <Li
-//         url="/admin/chart/line"
-//         text="Line"
-//         Icon={FaChartLine}
-//         location={location}
-//       />
-//     </ul>
-//   </div>
-// );
-
-// const DivThree = ({ location }: { location: Location }) => (
-//   <div>
-//     <h5>Apps</h5>
-//     <ul>
-//       <Li
-//         url="/admin/app/stopwatch"
-//         text="Stopwatch"
-//         Icon={FaStopwatch}
-//         location={location}
-//       />
-//       <Li
-//         url="/admin/app/coupon"
-//         text="Coupon"
-//         Icon={RiCoupon3Fill}
-//         location={location}
-//       />
-//       <Li
-//         url="/admin/app/toss"
-//         text="Toss"
-//         Icon={FaGamepad}
-//         location={location}
-//       />
-//     </ul>
-//   </div>
-// );
 
 interface LiProps {
   url: string;
@@ -164,6 +118,7 @@ interface LiProps {
   location: Location;
   Icon: IconType;
 }
+
 const Li = ({ url, text, location, Icon }: LiProps) => (
   <li
     style={{

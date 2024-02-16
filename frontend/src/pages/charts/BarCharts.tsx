@@ -15,11 +15,15 @@ const months = [
   "Nov",
   "Dec",
 ];
+interface UserRoleProps {
+  userRole: string;
+}
 
-const BarCharts = () => {
+
+const BarCharts = ({ userRole }: UserRoleProps) => {
   return (
     <div className="admin-container">
-      <AdminSidebar />
+     <AdminSidebar userRole={userRole}/>
       <main className="chart-container">
         <h1>Bar Charts</h1>
         <section>

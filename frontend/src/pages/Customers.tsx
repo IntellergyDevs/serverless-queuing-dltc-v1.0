@@ -86,8 +86,11 @@ const arr: DataType[] = [
     ),
   },
 ];
+interface UserRoleProps {
+  userRole: string;
+}
 
-const Customers = () => {
+const Customers = ({ userRole }: UserRoleProps) => {
   const [data] = useState<DataType[]>(arr);
 
   const Table = useCallback(
@@ -103,7 +106,7 @@ const Customers = () => {
 
   return (
     <div className="admin-container">
-      <AdminSidebar />
+      <AdminSidebar userRole={userRole}/>
       <main>{Table()}</main>
     </div>
   );

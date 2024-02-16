@@ -1,120 +1,102 @@
-import { ReactElement, useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AdminSidebar from "../components/AdminSidebar";
 import TableHOC from "../components/TableHOC";
 import { Column } from "react-table";
 import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
+import axios from "axios";
 
 interface DataType {
-  photo: ReactElement;
+  email: string;
   name: string;
-  price: number;
-  stock: number;
-  action: ReactElement;
+  option: string[]; // Change to array type
+  password: any;
+  station: string;
+  userRole: string;
+  username: string;
 }
 
 const columns: Column<DataType>[] = [
   {
-    Header: "Photo",
-    accessor: "photo",
-  },
-  {
-    Header: "Name",
+    Header: "Name and Surname",
     accessor: "name",
   },
   {
     Header: "Email",
     accessor: "email",
   },
+  // {
+  //   Header: "Service Option",
+  //   accessor: (row: DataType) => row.option.filter(opt => opt).join(', '), // Only display truthy options
+  // },
   {
-    Header: "Contact Number",
-    accessor: "contact number",
+    Header: "Work station",
+    accessor: "station",
   },
   {
-    Header: "Active",
-    accessor: "active",
-  },
-];
-
-const img =
-  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";
-
-const img2 = "https://m.media-amazon.com/images/I/514T0SvwkHL._SL1500_.jpg";
-
-const arr: DataType[] = [
-  {
-    photo: <img src={img} alt="Shoes" />,
-    name: "Elton John",
-    price: 690,
-    stock: 3,
-    action: <Link to="/admin/product/sajknaskd">Manage</Link>,
-  },
-
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "George Michael",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/product/sdaskdnkasjdn">Manage</Link>,
-  },
-  {
-    photo: <img src={img} alt="Shoes" />,
-    name: "Billy Joel",
-    price: 690,
-    stock: 3,
-    action: <Link to="/admin/product/sajknaskd">Manage</Link>,
-  },
-
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Kool and The Gang",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/product/sdaskdnkasjdn">Manage</Link>,
-  },
-  {
-    photo: <img src={img} alt="Shoes" />,
-    name: "Kenny G",
-    price: 690,
-    stock: 3,
-    action: <Link to="/admin/product/sajknaskd">Manage</Link>,
-  },
-
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Carlos Santana",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/product/sdaskdnkasjdn">Manage</Link>,
-  },
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Andrew Ridgeley",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/product/sdaskdnkasjdn">Manage</Link>,
+    Header: "userRole",
+    accessor: "userRole",
   },
 ];
 
-const Products = () => {
-  const [data] = useState<DataType[]>(arr);
+interface UserRoleProps {
+  userRole: string;
+}
+
+const Products = ({ userRole }: UserRoleProps) => {
+  const [data, setData] = useState<DataType[]>([]);
+
+  useEffect(() => {
+    // Fetch data from API when component mounts
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          "https://hps0z6b4xb.execute-api.us-east-1.amazonaws.com/prod/users"
+        );
+        const respData = JSON.parse(response.data.body);
+        console.log(respData);
+        setData(respData.map((item: any) => ({
+          ...item,
+          // Filter and extract keys with value true
+          option: Object.entries(item.option)
+            .filter(([_, value]) => value === true)
+            .map(([key, _]) => key),
+        })));
+        // setData(respData.map((item: any) => ({
+        //   ...item,
+        //   option: typeof item.option === 'string' ? item.option.split(',') : [], // Check if option is a string before splitting
+        // })));
+        // setData(respData)
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+    // Clean-up function to cancel any pending requests if component unmounts
+    return () => {
+      // Cancel any pending requests or clean-up operations
+    };
+  }, []); // Empty dependency array means this effect runs only once on mount
+
+  const modifiedColumns: Column<DataType>[] = [
+    ...columns,
+    {
+      Header: "Service Option",
+      accessor:(row: DataType) => row.option.join(', '), 
+    },
+  ];
 
   const Table = useCallback(
-    TableHOC<DataType>(
-      columns,
-      data,
-      "dashboard-product-box",
-      "Users",
-      true
-    ),
-    []
+    TableHOC<DataType>(modifiedColumns, data, "dashboard-product-box", "Users", true),
+    [data]
   );
 
   return (
     <div className="admin-container">
-      <AdminSidebar />
+      <br />
+      <AdminSidebar userRole={userRole} />
       <main>{Table()}</main>
-      <Link to="/admin/product/new" className="create-product-btn">
+      <Link to="/admin/user/new" className="create-product-btn">
         <FaPlus />
       </Link>
     </div>
@@ -122,3 +104,4 @@ const Products = () => {
 };
 
 export default Products;
+

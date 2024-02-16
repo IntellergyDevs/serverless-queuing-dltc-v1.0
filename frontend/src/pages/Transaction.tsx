@@ -66,8 +66,12 @@ const arr: DataType[] = [
     action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
   },
 ];
+interface UserRoleProps {
+  userRole: string;
+}
 
-const Transaction = () => {
+
+const Transaction = ({ userRole }: UserRoleProps) => {
   const [data] = useState<DataType[]>(arr);
 
   const Table = useCallback(
@@ -83,7 +87,8 @@ const Transaction = () => {
 
   return (
     <div className="admin-container">
-      <AdminSidebar />
+      <AdminSidebar userRole={userRole}/>
+      
       <main>{Table()}</main>
     </div>
   );

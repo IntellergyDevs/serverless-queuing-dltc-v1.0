@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import './user.css';
 
 interface User {
+  user_id: any;
   id: number;
   username: string;
   email: string;
@@ -25,7 +26,7 @@ export default function User() {
       if (statusCode === 200) {
         const jsonObject = JSON.parse(body);
         const transformedRows = jsonObject.map((item: User, index: number) => ({
-          id: index + 1,
+          iId: index + 1,
           ...item,
         }));
         setRows(transformedRows);
@@ -84,7 +85,7 @@ export default function User() {
             'error'
           );
         }
-      } catch (error) {
+      } catch (error:any) {
         if (error.response) {
           Swal.fire(
             'Error',
@@ -140,7 +141,7 @@ export default function User() {
         } else {
           Swal.fire('Error', 'Could not delete user', 'error');
         }
-      } catch (error) {
+      } catch (error:any) {
         Swal.fire('Error', 'Request failed: ' + error.message, 'error');
       }
     }
@@ -156,7 +157,7 @@ export default function User() {
       field: 'actions',
       headerName: 'Actions',
       width: 150,
-      renderCell: (params) => (
+      renderCell: (params: { row: { id: any; }; }) => (
         <div>
           <button onClick={() => handleDeleteUser(params.row.id)}>Delete</button>
         </div>
@@ -188,7 +189,14 @@ export default function User() {
         className="data-grid"
         rows={rows}
         columns={columns}
-        pageSize={5}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 5,
+            },
+          },
+        }}
+        pageSizeOptions={[5]}
         checkboxSelection
         pagination
       />

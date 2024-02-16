@@ -12,8 +12,12 @@ const formatTime = (timeInSeconds: number) => {
 
   return `${hoursInString}:${minutesInString}:${secondsInString}`;
 };
+interface UserRoleProps {
+  userRole: string;
+}
 
-const Stopwatch = () => {
+
+const Stopwatch = ({ userRole }: UserRoleProps) => {
   const [time, setTime] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
 
@@ -23,7 +27,7 @@ const Stopwatch = () => {
   };
 
   useEffect(() => {
-    let intervalID: number;
+    let intervalID: any;
     if (isRunning)
       intervalID = setInterval(() => {
         setTime((prev) => prev + 1);
@@ -36,7 +40,7 @@ const Stopwatch = () => {
 
   return (
     <div className="admin-container">
-      <AdminSidebar />
+      <AdminSidebar userRole={userRole}/>
       <main className="dashboard-app-container">
         <h1>Stopwatch</h1>
         <section>

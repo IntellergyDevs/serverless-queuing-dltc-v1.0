@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+// import withReactContent from 'sweetalert2-react-content';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { BsSearch } from "react-icons/bs";
+import userImg from "../../assets/userpic.png";
 import { useNavigate } from "react-router-dom";
-import  useSessionStorage  from '../../service/AuthService';
-import "./Agent.css";
+import useSessionStorage from '../../service/AuthService';
+import AdminSidebar from '../../components/AdminSidebar';
 
 interface Ticket {
     state: string;
@@ -12,83 +15,121 @@ interface Ticket {
     datetime: string;
     user: string;
     ticket_number: number;
+    option:any
 }
-
-function Agent() {
+interface UserRoleProps {
+    userRole: string;
+  }
+function Agent({ userRole }: UserRoleProps) {
     const navigate = useNavigate();
     const [tickets, setTickets] = useState<Ticket[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const [servedCount, setServedCount] = useState<number>(0);
+    const [, setServedCount] = useState<number>(0);
     const [doneCount, setDoneCount] = useState<number>(0);
+    const [qCount, setQCount] = useState<number>(0);
     const { resetUserSession } = useSessionStorage();
+    const [name, setName] = useState<string>('');
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
+    // const servicesData:any = {
+    //     '250-500': [216.00, 228.00],
+    //     '501-750': [324.00], // Assuming a single value means no range, just a fixed price
+    //     '751-1000': [360.00, 384.00],
+    //     '1001-1250': [400.00, 420.00] // Added as an example, adjust accordingly
+    //   };
+      
+    //   // Function to calculate price based on service (weight range) and schedule
+    //   const calculatePrice = (service: string, schedule: string): number => {
+    //     const prices = servicesData[service];
+    //     if (!prices) return 0; // Return 0 if the service is not found
+      
+    //     // Example logic to select price based on schedule or other conditions
+    //     const price = schedule === 'Morning' ? prices[0] : prices[1] || prices[0];
+    //     return price;
+    //   };
+
+    const toggleDropdown = () => {
+      setDropdownOpen(!dropdownOpen);
+    };
+  
     const handleLogout = (): void => {
         resetUserSession();
         showLoading();
-        navigate('/login');
+        navigate('/admin/login');
     }
 
-    // Text-to-Speech Function with Female Voice
-    const speakText = (text: string): void => {
-        if ('speechSynthesis' in window) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 1.2; // Adjust the rate as needed
-
-            const chooseVoice = (): void => {
-                let voices = window.speechSynthesis.getVoices();
-
-                // Filter for female voices
-                let femaleVoices = voices.filter(voice => voice.name.toLowerCase().includes("female"));
-
-                if (femaleVoices.length > 0) {
-                    // Choose the first available female voice
-                    utterance.voice = femaleVoices[0];
-                    window.speechSynthesis.speak(utterance);
-                } else {
-                    console.warn("No female voice available. Speech synthesis not performed.");
-                }
-            };
-
-            if (window.speechSynthesis.getVoices().length > 0) {
-                chooseVoice();
-            } else {
-                window.speechSynthesis.onvoiceschanged = chooseVoice;
-            }
-        } else {
-            console.error("Your browser does not support text-to-speech.");
-        }
-    };
-
     useEffect(() => {
+        // Fetch user data
+        var session:any = sessionStorage.getItem('user');
+        const sessionData = JSON.parse(session);
+        const userOptions = sessionData.option;
+        console.log(userOptions)
         const fetchData = async (): Promise<void> => {
+            let userOptionSelected;
             try {
-                const response = await axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets');
-                let data: Ticket[] = response.data;
-                data = data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
-
-                console.log(data);
-
-                const processedTickets = data.map(ticket => ({
-                    ...ticket,
-                    state: ticket.state,
-                    ticketNumber: ticket.ticket_number,
-                }));
-                setTickets(processedTickets);
-
+                
+                if (typeof userOptions === 'string') {
+                    userOptionSelected = userOptions
+                    // console.log(userOptions);
+                } else if (Array.isArray(userOptions)) {
+                    userOptions.forEach(option => {
+                        if (option === true) {
+                            userOptionSelected = userOptions
+                        }
+                    });
+                } else if (typeof userOptions === 'object') {
+                    for (const key in userOptions) {
+                        if (userOptions.hasOwnProperty(key) && userOptions[key] === true) {
+                            userOptionSelected = key                            
+                        }
+                    }
+                }
+                // Fetch tickets
+                const ticketResponse = await axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets');
+                let data: Ticket[] = ticketResponse.data;
+                data = data.sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime());
+                let processedTickets;
+                switch (userOptionSelected) {
+                    case "Professional_Driving_Permit":
+                        processedTickets = data.filter(ticket=> ticket?.option ==='Professional_Driving_Permit' );
+                        setTickets(processedTickets)
+                        break;
+                    case "Motor_Vehicle_License":
+                        processedTickets = data.filter(ticket=> ticket?.option ==='Motor_Vehicle_License' );
+                        setTickets(processedTickets) 
+                        break;
+                    case "Driver_Renewal_License":
+                        processedTickets = data.filter(ticket=> ticket?.option ==='Driver_Renewal_License' );
+                        setTickets(processedTickets) 
+                        break;
+                    case "Operating_License":
+                        processedTickets = data.filter(ticket=> ticket?.option ==='Operating_License' );
+                        setTickets(processedTickets) 
+                        break;
+                
+                    default:
+                        break;
+                }      
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-
+        setName(sessionData.name)
         fetchData();
         updateCounters();
-    }, [tickets]);
-
-
+        const intervalId = setInterval(fetchData, 10000); // Fetch every 10 seconds
+    
+        return () => clearInterval(intervalId); // Cleanup interval
+    }, []);
+    
+    
+    
 
     const updateCounters = (): void => {
         setServedCount(tickets.filter(ticket => ticket.state === 'Serving').length);
+        setQCount(tickets.filter(ticket => ticket.state === 'in Queue').length);
         setDoneCount(tickets.filter(ticket => ticket.state === 'Done').length);
+        
     };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -103,7 +144,7 @@ function Agent() {
             didOpen: () => {
                 Swal.showLoading();
             }
-        }).then((result) => {
+        }).then((result:any) => {
             if (result.dismiss === Swal.DismissReason.timer) {
                 console.log('closed by timer!!!!');
                 Swal.fire({
@@ -125,7 +166,15 @@ function Agent() {
         });
     };
 
+  
     const handleAction = async (ticketNumber: number, action: string): Promise<void> => {
+        console.log(ticketNumber)
+        var session : any = sessionStorage.getItem('user');
+        const sessionData = JSON.parse(session);
+        console.log(sessionData)
+        const myEmail = sessionData.email
+        const station = sessionData.station
+        console.log(station)
         let updatedTickets = [...tickets];
 
         if (action === 'Serving') {
@@ -135,17 +184,14 @@ function Agent() {
                 updatedTickets = updatedTickets.map(ticket =>
                     ticket.state === 'Serving' ? { ...ticket, state: 'Done' } : ticket
                 );
-                await updateTicketState('Done', currentlyServingTicket.ticket_number);
+                 await updateTicketState('Done', currentlyServingTicket.ticket_number, myEmail, station);
             }
 
             updatedTickets = updatedTickets.map(ticket =>
                 ticket.ticket_number === ticketNumber ? { ...ticket, state: 'Serving' } : ticket
             );
 
-            const ticketBeingServed = updatedTickets.find(ticket => ticket.ticket_number === ticketNumber);
-            if (ticketBeingServed) {
-                speakText(`Ticket number ${ticketNumber} at station number 1.`);
-            }
+           
         } else {
             updatedTickets = updatedTickets.map(ticket => {
                 if (ticket.ticket_number === ticketNumber) {
@@ -157,18 +203,22 @@ function Agent() {
 
         setTickets(updatedTickets);
         updateCounters();
-        await updateTicketState(action, ticketNumber);
+        await updateTicketState(action, ticketNumber, myEmail, station );
     };
 
-    const updateTicketState = async (newState: string, ticketNumber: number): Promise<void> => {
-        console.log('Updating ticket state:', newState, 'Ticket number:', ticketNumber);
+    const updateTicketState = async (newState: string, ticketNumber: number, userEmail:string, stationNumber:string): Promise<void> => {
+        // console.log('Updating ticket state:', newState, 'Ticket number:', ticketNumber);
+        console.log(userEmail)
 
         try {
             const response = await axios.put(`https://u9qok0btf1.execute-api.us-east-1.amazonaws.com/Dev/ticket`, {
                 ticket_number: ticketNumber,
-                state: newState
+                state: newState,
+                served_by: userEmail,
+                station:stationNumber
 
             });
+            console.log(userEmail)
             console.log('Update response:', response);
         } catch (error) {
             console.error("Error updating ticket:", error);
@@ -188,65 +238,83 @@ function Agent() {
 
     return (
         <>
-            <div className="sign-out-container">
-                <div className='search-section'>
-                    <input
-                        type="text"
-                        className="form-control mb-3"
-                        placeholder="Search ticket by number..."
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                    />
-                    {searchQuery && (
-                        <div className="list-group">
-                            {filteredTickets.map(ticket => (
-                                <button
-                                    key={ticket.ticket_number}
-                                    className="list-group-item list-group-item-action"
-                                    onClick={() => handleTicketSelect(ticket)}
-                                >
-                                    Ticket NO {ticket.ticketNumber}
-                                </button>
-                            ))}
+            
+            <div className='admin-container'>
+            <AdminSidebar userRole={userRole}/>
+                <main className="dashboard">
+                    <div className="bar">
+                        <BsSearch />
+                        <input type="text" placeholder="Search for Ticket " value={searchQuery} onChange={handleSearchChange} />
+                        {searchQuery && (
+                            <div className="list-group">
+                                {filteredTickets.map(ticket => (
+                                    <button
+                                        key={ticket.ticket_number}
+                                        className="list-group-item list-group-item-action"
+                                        onClick={() => handleTicketSelect(ticket)}
+                                    >
+                                        Ticket NO {ticket.ticketNumber}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                        <div className='ticketCounters'>
+                            <p className='ticketCounters-para'>Done: {doneCount}</p>
+                            <p className='ticketCounters-para'>Queue:{qCount} </p>
                         </div>
-                    )}
-                </div>
-                <div className='btn-section'>
-                    <button className="btn btn-secondary" onClick={handleLogout}>
-                        Sign Out
-                    </button>
-                </div>
-            </div>
-            <h3>Tickets Done: {doneCount}</h3>
+<div className='profile'>
+      <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
+        <img src={userImg} alt="User" />
+        <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
+          <a href="#home">About</a>
+          <a href="#home">Settings</a>
+          <a  onClick={handleLogout}>Sign Out</a>
 
-            <div className='container-agent mt-4'>
-                {['in Queue', 'Serving', 'Done', 'Cancel'].map((section) => (
-                    <div key={section} className="section mb-3 lane">
-                        <h2>{section}</h2>
-                        <div className="d-flex flex-wrap">
-                            {tickets.filter(ticket => ticket.state === section).map(ticket => (
-                                <div className='card m-2' style={{ width: '18rem' }} key={ticket.ticket_number}>
-                                    <div className='card-body'>
-                                        <h5 className='card-title'>Ticket NO {ticket.ticketNumber}</h5>
-                                        <div className="d-flex justify-content-between">
-                                            {section === 'Cancel' ? (
-                                                <button className='btn btn-primary' onClick={() => handleAction(ticket.ticket_number, 'in Queue')}>Reinstate</button>
-                                            ) : (
-                                                <button className='btn btn-danger' onClick={() => handleAction(ticket.ticket_number, 'Cancel')}>Cancel</button>
-                                            )}
-                                            {ticket.state === 'in Queue' && (
-                                                <button className='btn btn-success' onClick={() => handleAction(ticket.ticket_number, 'Serving')}>Serve</button>
-                                            )}
-                                            {section === 'Done' && (
-                                                <button className='btn btn-info' onClick={() => handleReview(ticket.ticket_number)}>Review</button>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+          
+        </div>
+      </div>
+      <p>{name}</p>
+    </div>
+        </div>
+                    <br />
+                    <div className="task-statuses">
+                        <span>in Queue</span>
+                        <span>Serving</span>
+                        <span>Done</span>
+                        <span>Cancel</span>
                     </div>
-                ))}
+                    <div className='container-agent mt-4'>
+                        {['in Queue', 'Serving', 'Done', 'Cancel'].map((section) => (
+                            <div key={section} className="section mb-3 lane" style={{ maxHeight: '580px', overflowY: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', position: 'relative' }}>
+
+                                <h2 style={{ visibility: 'hidden', position: 'absolute', top: 0, left: 0 }}>{section}</h2> {/* Hide the section text */}
+                                <div className="d-flex flex-wrap">
+                                    {tickets.filter(ticket => ticket.state === section).map(ticket => (
+                                        <div className='card m-2' style={{ width: '18rem' }} key={ticket.ticket_number}>
+                                            <div className='card-body'>
+                                                <h5 className='card-title'>Ticket NO {ticket.ticket_number}</h5>
+                                                <div className="d-flex justify-content-between">
+                                                    {section === 'Cancel' ? (
+                                                        <button className='btn btn-primary' onClick={() => handleAction(ticket.ticket_number, 'in Queue')}>Reinstate</button>
+                                                    ) : (
+                                                        <button className='btn btn-danger' onClick={() => handleAction(ticket.ticket_number, 'Cancel')}>Cancel</button>
+                                                    )}
+                                                    {ticket.state === 'in Queue' && (
+                                                        <button className='btn btn-success' onClick={() => handleAction(ticket.ticket_number, 'Serving')}>Serve</button>
+                                                    )}
+                                                    {section === 'Done' && (
+                                                        <button className='btn btn-info' onClick={() => handleReview(ticket.ticket_number)}>Review</button>
+                                                    )}
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </main>
             </div>
         </>
     );

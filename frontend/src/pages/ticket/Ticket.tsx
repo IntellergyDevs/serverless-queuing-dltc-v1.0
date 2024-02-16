@@ -7,24 +7,24 @@ const Ticket: React.FC = () => {
   const [ticketNumber, setTicketNumber] = useState<string>('');
   const [reason, setReason] = useState<string>('');
   const [numberInQueue, setNumberInQueue] = useState<number>(0);
-  const [estimatedServiceTime, setEstimatedServiceTime] = useState<string>('');
+  const [, setEstimatedServiceTime] = useState<string>('');
   const [staticEstimatedTime, setStaticEstimatedTime] = useState<string>('');
 
-  const [serviceTime, setServiceTime] = useState<number>(0);
-  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  // const [serviceTime, setServiceTime] = useState<number>(0);
+  // const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
-  const [ticketId, setTicketId] = useState<string>('');
+  // const [ticketId, setTicketId] = useState<string>('');
 
   const calculateNumberInQueue = useCallback(async (dateTime: string, option: string) => {
     try {
       const response = await axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets');
       const tickets: any[] = response.data;
       const numberBefore: number = countTicketsBefore(tickets, dateTime, option);
-      const foundTicketId: string | null = findTicketId(tickets, dateTime, option);
+      // const foundTicketId: string | null = findTicketId(tickets, dateTime, option);
       setNumberInQueue(numberBefore);
-      setTicketId(foundTicketId);
+      // setTicketId(foundTicketId);
       calculateEstimatedServiceTime(numberBefore);
-    } catch (error) {
+    } catch (error:any) {
       Swal.fire("Error", "Error fetching tickets: " + error.message, "error");
     }
   }, []);
@@ -46,84 +46,84 @@ const Ticket: React.FC = () => {
     return () => clearInterval(intervalId);
   }, [calculateNumberInQueue]);
 
-  const startServiceTimer = useCallback(() => {
-    setTimer(setInterval(() => {
-      setServiceTime(time => time + 1);
-    }, 1000));
-  }, []);
+  // const startServiceTimer = useCallback(() => {
+  //   setTimer(setInterval(() => {
+  //     setServiceTime(time => time + 1);
+  //   }, 1000));
+  // }, []);
 
-  const stopServiceTimer = useCallback(() => {
-    clearInterval(timer!);
-    setTimer(null);
-    Swal.fire({
-      title: 'Rate Our Service',
-      text: 'Please rate the service you received.',
-      icon: 'question',
-      input: 'range',
-      inputAttributes: {
-        min: 1,
-        max: 5,
-        step: 1
-      },
-      inputLabel: 'Rating',
-      confirmButtonText: 'Submit'
-    }).then(result => {
-      if (result.value) {
-        updateTicketWithTimeAndRating(serviceTime, result.value);
-        setServiceTime(0);
-      }
-    });
-  }, [timer, serviceTime]);
+  // const stopServiceTimer :any= useCallback(() => {
+  //   clearInterval(timer!);
+  //   setTimer(null);
+  //   Swal.fire({
+  //     title: 'Rate Our Service',
+  //     text: 'Please rate the service you received.',
+  //     icon: 'question',
+  //     input: 'range',
+  //     inputAttributes: {
+  //       min: 1,
+  //       max: 5,
+  //       step: 1
+  //     },
+  //     inputLabel: 'Rating',
+  //     confirmButtonText: 'Submit'
+  //   }).then(result => {
+  //     if (result.value) {
+  //       updateTicketWithTimeAndRating(serviceTime, result.value);
+  //       setServiceTime(0);
+  //     }
+  //   });
+  // }, [timer, serviceTime]);
 
-  useEffect(() => {
-    if (numberInQueue === 1 && !timer) {
-      startServiceTimer();
-      Swal.fire({
-        title: 'Rate Our Service',
-        text: 'Please rate the service you received.',
-        icon: 'question',
-        input: 'range',
-        inputAttributes: {
-          min: 1,
-          max: 5,
-          step: 1
-        },
-        inputLabel: 'Rating',
-        confirmButtonText: 'Submit'
-      }).then(result => {
-        if (result.value) {
-          updateTicketWithTimeAndRating(serviceTime, result.value);
-          setServiceTime(0);
-        }
-      });
-    } else if (numberInQueue < 1 && timer) {
-      stopServiceTimer();
-    }
-  }, [numberInQueue, timer, startServiceTimer, stopServiceTimer]);
+  // useEffect(() => {
+  //   if (numberInQueue === 1 && !timer) {
+  //     startServiceTimer();
+  //     Swal.fire({
+  //       title: 'Rate Our Service',
+  //       text: 'Please rate the service you received.',
+  //       icon: 'question',
+  //       input: 'range',
+  //       inputAttributes: {
+  //         min: 1,
+  //         max: 5,
+  //         step: 1
+  //       },
+  //       inputLabel: 'Rating',
+  //       confirmButtonText: 'Submit'
+  //     }).then(result => {
+  //       if (result.value) {
+  //         updateTicketWithTimeAndRating(serviceTime, result.value);
+  //         setServiceTime(0);
+  //       }
+  //     });
+  //   } else if (numberInQueue < 1 && timer) {
+  //     stopServiceTimer();
+  //   }
+  // }, [numberInQueue, timer, startServiceTimer, stopServiceTimer]);
 
-  const updateTicketWithTimeAndRating = async (time: number, rating: number) => {
-    try {
-      await axios.put(`https://u9qok0btf1.execute-api.us-east-1.amazonaws.com/Dev/ticket`, {
-        serviceTime: time,
-        serviceRating: rating
-      });
-    } catch (error) {
-      Swal.fire("Error", "Error updating ticket: " + error.message, "error");
-    }
-  };
+  // const updateTicketWithTimeAndRating = async (time: number, rating: number) => {
+  //   try {
+  //     await axios.put(`https://u9qok0btf1.execute-api.us-east-1.amazonaws.com/Dev/ticket`, {
+  //       serviceTime: time,
+  //       serviceRating: rating
+  //     });
+  //   } catch (error:any) {
+  //     Swal.fire("Error", "Error updating ticket: " + error.message, "error");
+  //   }
+  // };
 
-  const findTicketId = (tickets: any[], dateTime: string, option: string): string | null => {
-    try {
-      const ticket = tickets.find(ticket =>
-        new Date(ticket.datetime).toISOString() === dateTime &&
-        ticket.option === option
-      );
-      return ticket ? ticket.ticket_number : null;
-    } catch (error) {
-      console.error("Error finding ticket:", error);
-      return null;
-    }
-  };
+  // const findTicketId = (tickets: any[], dateTime: string, option: string): string | null => {
+  //   try {
+  //     const ticket = tickets.find(ticket =>
+  //       new Date(ticket.datetime).toISOString() === dateTime &&
+  //       ticket.option === option
+  //     );
+  //     return ticket ? ticket.ticket_number : null;
+  //   } catch (error) {
+  //     console.error("Error finding ticket:", error);
+  //     return null;
+  //   }
+  // };
 
   const countTicketsBefore = (tickets: any[], currentTicketDateTime: string, option: string): number => {
     try {
@@ -146,7 +146,7 @@ const Ticket: React.FC = () => {
       const totalWaitTime = numberBefore * averageWaitTimePerPerson;
       const currentTime = new Date();
       currentTime.setMinutes(currentTime.getMinutes() + totalWaitTime);
-      const newEstimatedTime = currentTime.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit', hour24: true });
+      const newEstimatedTime = currentTime.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit', hour12: false });
       setEstimatedServiceTime(newEstimatedTime);
       setStaticEstimatedTime(newEstimatedTime);
     }
@@ -172,15 +172,15 @@ const Ticket: React.FC = () => {
     <div className="ticket-container">
       <div className="header">
         <img src="https://dltccoffeeimages.s3.amazonaws.com/new_logo_dltc.png" alt="Logo" className="logo" />
-        <h1 className="welcome-text">Welcome to SMART LICENSING</h1>
+        <h1 className="welcome-text">Welcome to Smart Licencing</h1>
 
       </div>
       <div className="ticket-info">
         <div className="ticket-number-container">
-          <p className="ticket-number">Ticket NO: <span className='ticket-number-color'>{ticketNumber}</span></p>
-          <p>Number in Queue: <span className='ticket-number-color-fontSize'>{queueMessage()}</span></p>
-          <p>Estimated Service Time: <span className='ticket-number-color-fontSize'>{staticEstimatedTime}</span></p>
-          <p>Reason for visit: <span className='ticket-number-color-bold'>{reason}</span></p>
+          <p className="ticket-number">Ticket No: <span className='ticket-number-color'>{ticketNumber}</span></p>
+          <p className="ticket-number">Your Position in Queue: <span className='ticket-number-color-fontSize'>{queueMessage()}</span></p>
+          <p className="ticket-number">Estimated Service Time: <span className='ticket-number-color-fontSize'>{staticEstimatedTime}</span></p>
+          <p className="ticket-number">Reason for Visit: <span className='ticket-number-color-bold'>{reason}</span></p>
         </div>
       </div>
     </div>

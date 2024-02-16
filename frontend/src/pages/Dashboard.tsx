@@ -1,99 +1,176 @@
-import { FaRegBell } from "react-icons/fa";
+
 import AdminSidebar from "../components/AdminSidebar";
 import { BsSearch } from "react-icons/bs";
 import userImg from "../assets/userpic.png";
-import { HiTrendingUp, HiTrendingDown } from "react-icons/hi";
-import data from "../assets/data.json";
-import { BarChart, DoughnutChart } from "../components/Charts";
-import { BiMaleFemale } from "react-icons/bi";
-import Table from "../components/DashboardTable";
+import axios from 'axios';
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import useSessionStorage from "../service/AuthService";
+
+
+
+interface Ticket {
+  state: string;
+  ticketNumber: number;
+  datetime: string;
+  user: string;
+  ticket_number: number;
+}
+
 
 const dashboard = () => {
+
+  const [tickets] = useState<Ticket[]>([]);
+  const [ticketCount, setTicketCount] = useState(0);
+
+  const [ticketServingCount, setTicketServingCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [userRole, setUserRole] = useState<string>('');
+  const [ticketDoneCount, setTicketDoneCount] = useState(0);
+
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { resetUserSession } = useSessionStorage();
+  const navigate = useNavigate();
+
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const showLoading = function (): void {
+    Swal.fire({
+        title: 'Now loading',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        timer: 2000,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    }).then((result:any) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+            console.log('closed by timer!!!!');
+            Swal.fire({
+                title: 'Finished!',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+    });
+};
+
+
+
+  const handleLogout = (): void => {
+    resetUserSession();
+    showLoading();
+    
+    navigate('/admin/login');
+}
+
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearchQuery(event.target.value);
+  };
+  const handleTicketSelect = (ticket: Ticket): void => {
+    Swal.fire({
+      title: `Ticket NO ${ticket.ticketNumber}`,
+      html: `<strong>Status:</strong> ${ticket.state}<br/><strong>Description:</strong> ${ticket.user}`,
+      icon: 'info',
+      confirmButtonText: 'Close'
+    });
+  };
+  const filteredTickets = tickets.filter(ticket => ticket.ticketNumber && ticket.ticketNumber.toString().includes(searchQuery));
+  useEffect(() => {
+    axios.post('https://bbkzcze7c3.execute-api.us-east-1.amazonaws.com/Dev/list_tickets')
+      .then((response:any) => {
+          console.log(response.data)
+          setTicketCount(response.data.length);
+          setTicketServingCount(response.data.filter((ticket: {
+            state: string; status: string;
+          }) => ticket.state === "Cancel").length);
+
+          setTicketDoneCount(response.data.filter((ticket: {
+            state: string; status: string;
+          }) => ticket.state === "Done").length);
+        }
+      ).catch((error:any) => {
+        console.error('Error fetching data:', error);
+      });
+      var session:any = sessionStorage.getItem('user');
+      const sessionData = JSON.parse(session);
+      
+      console.log(sessionData)
+      setUserRole(sessionData.user)
+  
+      setName(sessionData.name)
+      
+
+  }, []);
+
+
   return (
     <div className="admin-container">
-      <AdminSidebar />
+      <AdminSidebar userRole={userRole}/>
       <main className="dashboard">
         <div className="bar">
           <BsSearch />
-          <input type="text" placeholder="Search for data, users, docs" />
-          <FaRegBell />
-          <img src={userImg} alt="User" />
+          <input type="text" placeholder="Search for User " value={searchQuery} onChange={handleSearchChange} />
+          {searchQuery && (
+            <div className="list-group">
+              {filteredTickets.map(ticket => (
+                <button
+                  key={ticket.ticket_number}
+                  className="list-group-item list-group-item-action"
+                  onClick={() => handleTicketSelect(ticket)}
+                >
+                  Ticket NO {ticket.ticketNumber}
+                </button>
+              ))}
+            </div>
+          )}
+          
+<div className='profile'>
+      <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
+        <img src={userImg} alt="User" />
+        <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
+          <a >About</a>
+          <a >Settings</a>
+          <a  onClick={handleLogout}>Sign Out</a>          
         </div>
-
+      </div>
+      <p>{name}</p>
+    </div>
+        </div>
         <section className="widget-container">
           <WidgetItem
-            percent={40}
+            percent={ticketCount / 100}
             amount={true}
-            value={340000}
-            heading="Revenue"
+            value={ticketCount}
+            heading="Total Tickets"
             color="rgb(0,115,255)"
           />
           <WidgetItem
-            percent={-14}
-            value={400}
-            heading="Users"
+            percent={(Math.round((ticketServingCount / ticketCount) * 100))}
+            value={ticketServingCount}
+            heading="Tickets Cancelled"
             color="rgb(0 198 202)"
+
           />
           <WidgetItem
-            percent={80}
-            value={23000}
-            heading="Transactions"
+            percent={(Math.round((ticketDoneCount / ticketCount) * 100))}
+            value={ticketDoneCount}
+            heading="Tickets Completed"
             color="rgb(255 196 0)"
           />
-          <WidgetItem
-            percent={30}
-            value={1000}
-            heading="Products"
-            color="rgb(76 0 255)"
-          />
+          
         </section>
 
-        <section className="graph-container">
-          <div className="revenue-chart">
-            <h2>Revenue & Transaction</h2>
-            {/* Grapph here */}
-            <BarChart
-              data_2={[300, 144, 433, 655, 237, 755, 190]}
-              data_1={[200, 444, 343, 556, 778, 455, 990]}
-              title_1="Revenue"
-              title_2="Transaction"
-              bgColor_1="rgb(0,115,255)"
-              bgColor_2="rgba(53,162,235,0.8)"
-            />
-          </div>
-
-          <div className="dashboard-categories">
-            <h2>Inventory</h2>
-            <div>
-              {data.categories.map((i) => (
-                <CategoryItem
-                  key={i.heading}
-                  heading={i.heading}
-                  value={i.value}
-                  color={`hsl(${i.value * 4},${i.value}%,50%)`}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
 
         <section className="transaction-container">
-          <div className="gender-chart">
-            <h2>Gender Ratio</h2>
-
-            <DoughnutChart
-              labels={["Female", "Male"]}
-              data={[12, 19]}
-              backgroundColor={["hsl(340,82%,56%)", "rgba(53,162,235,0.8)"]}
-              cutout={90}
-            />
-
-            <p>
-              <BiMaleFemale />
-            </p>
-          </div>
-
-          <Table data={data.transaction} />
         </section>
       </main>
     </div>
@@ -108,6 +185,7 @@ interface WidgetItemProps {
   amount?: boolean;
 }
 
+
 const WidgetItem = ({
   heading,
   value,
@@ -118,16 +196,7 @@ const WidgetItem = ({
   <article className="widget">
     <div className="widget-info">
       <p>{heading}</p>
-      <h4>{amount ? `$${value}` : value}</h4>
-      {percent > 0 ? (
-        <span className="green">
-          <HiTrendingUp /> +{percent}%{" "}
-        </span>
-      ) : (
-        <span className="red">
-          <HiTrendingDown /> {percent}%{" "}
-        </span>
-      )}
+      <h4>{amount ? `${value}` : value}</h4>
     </div>
 
     <div
@@ -148,27 +217,6 @@ const WidgetItem = ({
       </span>
     </div>
   </article>
-);
-
-interface CategoryItemProps {
-  color: string;
-  value: number;
-  heading: string;
-}
-
-const CategoryItem = ({ color, value, heading }: CategoryItemProps) => (
-  <div className="category-item">
-    <h5>{heading}</h5>
-    <div>
-      <div
-        style={{
-          backgroundColor: color,
-          width: `${value}%`,
-        }}
-      ></div>
-    </div>
-    <span>{value}%</span>
-  </div>
 );
 
 export default dashboard;

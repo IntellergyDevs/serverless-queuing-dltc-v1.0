@@ -1,7 +1,11 @@
 import { useState } from "react";
 import AdminSidebar from "../../components/AdminSidebar";
 
-const Toss = () => {
+interface UserRoleProps {
+  userRole: string;
+}
+
+const Toss = ({ userRole }: UserRoleProps) => {
   const [angle, setAngle] = useState<number>(0);
 
   const flipCoin = () => {
@@ -11,7 +15,7 @@ const Toss = () => {
 
   return (
     <div className="admin-container">
-      <AdminSidebar />
+      <AdminSidebar userRole={userRole}/>
       <main className="dashboard-app-container">
         <h1>Toss</h1>
         <section>

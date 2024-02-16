@@ -1,28 +1,197 @@
 .dashboard {
   overflow-y: auto;
 
+  * {
+    box-sizing: border-box;
+  }
+
+  .dropbtn {
+    background: #04aa6d;
+    border: none;
+    font-size: 17px;
+    padding: 17px;
+    color: #fff;
+  }
+
+  .drobdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-content {
+    display: none;
+    background: #f1f1f1;
+    min-width: 160px;
+    position: absolute;
+    z-index: 1;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .dropdown-content a {
+    display: block;
+    color: #000;
+    text-decoration: none;
+    padding: 17px;
+    font-size: 18px;
+  }
+
+  .dropdown-content a:hover {
+    background: #ddd;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .dropdown:hover .dropbtn {
+    background: #3e8341;
+  }
+
+
+
+  .task-statuses {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    // margin: 0 auto;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 30px;
+
+
+    & span {
+      padding: 0 5px;
+      /* Adjust padding for all spans */
+    }
+
+    & span:first-child {
+      margin-left: 35px;
+      /* Adjust margin for the first span (in Queue) */
+    }
+
+    & span:nth-child(2) {
+      margin-right: 12px;
+      /* Adjust margin for the second span (Serving) */
+    }
+
+    & span:nth-child(3) {
+      margin-right: px;
+      /* Adjust margin for the second span (Serving) */
+    }
+
+    & span:nth-child(4) {
+      margin-right: 50px;
+      /* Adjust margin for the second span (Serving) */
+    }
+
+
+  }
+
+
   .bar {
-    height: 4rem;
-    @include flex(row, unset);
-    padding: 0 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.37);
-    > input {
+    height: 5rem;
+    width: 60%;
+    margin-left: 10%;
+    align-items: center;
+    padding-left: 1%;
+    display: flex;
+    // flex-direction: column;
+
+    // padding: 0 1rem;
+   
+
+    >input {
       margin-right: auto;
-      @include inputStyle(100%, 1rem 0);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.37);
+      @include inputStyle(40%, 0 1rem);
+
+      &:focus {
+        border-bottom: 2px solid blue;
+        /* Change the color or style as needed */
+      }
     }
-    > svg {
-      font-size: 1.2rem;
-      opacity: 0.7;
+
+    .profile {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-right: 4%;
+      top: 1%;
+      right: 0;
+      position: absolute;
+    
+      .dropdown {
+        position: relative;
+        cursor: pointer;
+    
+        img {
+          @include square(2rem);
+          border-radius: 50%;
+        }
+    
+        .dropdown-content {
+          display: none;
+          background: #f1f1f1;
+          min-width: 160px;
+          position: absolute;
+          z-index: 1;
+          box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+          border-radius: 10px;
+          transition: opacity 0.3s, transform 0.5s;
+    
+          a {
+            display: block;
+            color: #000;
+            text-decoration: none;
+            padding: 17px;
+            font-size: 18px;
+          }
+    
+          a:hover {
+            background: white;
+          }
+        }
+    
+        &:hover .dropdown-content {
+          display: block;
+        }
+    
+        &.show .dropdown-content {
+          display: block;
+        }
+      }
+    
+      > p {
+        margin-left: 10px;
+      }
     }
-    > img {
-      @include square(2rem);
-      border-radius: 50%;
+    
+    .ticketCounters {
+      display: flex;
+      justify-content: space-around;
+      border: 2px solid red;
+      border-radius: 10px;
+      padding: 1%;
+      align-items: center;
+      width: 20%;
+      margin-top: 1%;
+
+      >.ticketCounters-para {
+        margin-right: 1%;
+      }
+
+    }
+
+    >p {
+      align-items: center;
+      color: green
     }
   }
 
   .widget-container {
-    @include flex(row, space-between, stretch, 2rem);
-    padding: 2rem 2rem 2rem 0;
+    @include flex(row, space-between, stretch, 10rem);
+    padding: 2rem 10rem 2rem 0;
+    margin-left: 65px;
 
     .widget {
       width: 16rem;
@@ -30,17 +199,20 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.132);
       padding: 2rem;
       border-radius: 10px;
-      @include flex(row, space-between, stretch, 0);
+      padding: 2rem;
+      @include flex(row, stretch, 0);
 
       .widget-info {
-        > p {
+        >p {
           opacity: 0.7;
-          font-size: 0.8rem;
+          font-size: 0.9rem;
         }
-        > h4 {
-          font-size: 1.5rem;
+
+        >h4 {
+          font-size: 3rem;
         }
-        > span {
+
+        >span {
           @include flex(row, unset, center, 0.2rem);
         }
       }
@@ -53,6 +225,7 @@
         display: grid;
         place-items: center;
         background-color: aquamarine;
+
         &::before {
           content: "";
           position: absolute;
@@ -60,6 +233,7 @@
           background-color: white;
           border-radius: 100%;
         }
+
         span {
           position: relative;
         }
@@ -70,7 +244,8 @@
   .graph-container {
     @include flex(row, unset, unset, 2rem);
     padding: 0 2rem 2rem 0;
-    > div {
+
+    >div {
       background-color: white;
       border-radius: 10px;
     }
@@ -79,7 +254,7 @@
       width: 100%;
       padding: 1rem 3rem;
 
-      > h2 {
+      >h2 {
         @include heading;
         margin: 1rem 0 2rem 0.25rem;
         text-align: center;
@@ -91,13 +266,14 @@
       max-width: 16rem;
       @include flex(column, center, unset, 0);
       padding-bottom: 2rem;
-      > h2 {
+
+      >h2 {
         @include heading;
         margin: 1.5rem 0 2rem 0;
         text-align: center;
       }
 
-      > div {
+      >div {
         overflow-y: auto;
         padding-left: 0.5rem;
       }
@@ -106,23 +282,27 @@
         width: 100%;
         @include flex(row, space-between);
         padding: 1rem;
-        > h5 {
+
+        >h5 {
           letter-spacing: 1px;
           font-weight: 300;
         }
-        > div {
+
+        >div {
           margin-left: auto;
           width: 6rem;
           background-color: rgb(217, 217, 217);
           border-radius: 20px;
           height: 0.5rem;
           flex: none;
-          > div {
+
+          >div {
             border-radius: 20px;
             height: 100%;
           }
         }
-        > span {
+
+        >span {
           font-size: 0.8rem;
           font-weight: 700;
         }
@@ -136,22 +316,25 @@
     padding: 0 2rem 2rem 0;
     height: 30rem;
 
-    > div {
+    >div {
       background-color: white;
       box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.132);
       border-radius: 10px;
     }
+
     .gender-chart {
       width: 100%;
       max-width: 20rem;
       padding: 1rem;
       position: relative;
-      > h2 {
+
+      >h2 {
         text-align: center;
         margin: 1.5rem 0 2rem 0;
         @include heading;
       }
-      > p {
+
+      >p {
         @include posCenter;
         font-size: 2rem;
         color: rgba(0, 0, 0, 0.634);
@@ -162,7 +345,8 @@
       width: 100%;
       padding: 1rem;
       overflow-x: auto;
-      > h2 {
+
+      >h2 {
         margin: 1.5rem 0 0 0;
         @include heading;
       }

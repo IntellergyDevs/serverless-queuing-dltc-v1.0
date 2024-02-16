@@ -4,7 +4,11 @@ import AdminSidebar from "../../components/AdminSidebar";
 const img =
   "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";
 
-const ProductManagement = () => {
+  interface UserRoleProps {
+    userRole: string;
+  }
+
+  const ProductManagement = ({ userRole }: UserRoleProps) => {
   const [name, setName] = useState<string>("Puma Shoes");
   const [price, setPrice] = useState<number>(2000);
   const [stock, setStock] = useState<number>(10);
@@ -37,7 +41,7 @@ const ProductManagement = () => {
   };
   return (
     <div className="admin-container">
-      <AdminSidebar />
+     <AdminSidebar userRole={userRole}/>
       <main className="product-management">
         <section>
           <strong>ID - asnmdkasndmsan</strong>

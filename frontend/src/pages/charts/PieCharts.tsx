@@ -2,10 +2,16 @@ import AdminSidebar from "../../components/AdminSidebar";
 import { DoughnutChart, PieChart } from "../../components/Charts";
 import { categories } from "../../assets/data.json";
 
-const PieCharts = () => {
+
+interface UserRoleProps {
+  userRole: string;
+}
+
+
+const PieCharts = ({ userRole }: UserRoleProps) => {
   return (
     <div className="admin-container">
-      <AdminSidebar />
+     <AdminSidebar userRole={userRole}/>
       <main className="chart-container">
         <h1>Pie & Doughnut Charts</h1>
         <section>

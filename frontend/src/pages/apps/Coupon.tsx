@@ -5,7 +5,11 @@ const allLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 const allNumbers = "1234567890";
 const allSymbols = "!@#$%^&*()_+";
 
-const Coupon = () => {
+
+interface UserRoleProps {
+  userRole: string;
+}
+const Coupon = ({ userRole }: UserRoleProps) => {
   const [size, setSize] = useState<number>(8);
   const [prefix, setPrefix] = useState<string>("");
   const [includeNumbers, setIncludeNumbers] = useState<boolean>(false);
@@ -19,6 +23,7 @@ const Coupon = () => {
     await window.navigator.clipboard.writeText(coupon);
     setIsCopied(true);
   };
+ 
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,7 +53,7 @@ const Coupon = () => {
 
   return (
     <div className="admin-container">
-      <AdminSidebar />
+      <AdminSidebar userRole={userRole}/>
       <main className="dashboard-app-container">
         <h1>Coupon</h1>
         <section>

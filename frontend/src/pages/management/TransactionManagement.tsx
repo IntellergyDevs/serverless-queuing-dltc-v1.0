@@ -15,8 +15,11 @@ const orderItems: OrderItemType[] = [
     price: 2000,
   },
 ];
+interface UserRoleProps {
+  userRole: string;
+}
 
-const TransactionManagement = () => {
+const TransactionManagement = ({ userRole }: UserRoleProps) => {
   const [order, setOrder] = useState<OrderType>({
     name: "Abhishek Singh",
     address: "77 Black Street",
@@ -58,7 +61,7 @@ const TransactionManagement = () => {
 
   return (
     <div className="admin-container">
-      <AdminSidebar />
+     <AdminSidebar userRole={userRole}/>
       <main className="product-management">
         <section
           style={{

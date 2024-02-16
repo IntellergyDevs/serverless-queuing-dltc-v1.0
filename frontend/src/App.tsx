@@ -1,10 +1,15 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Suspense, lazy, useState,useEffect } from "react";
 import Loader from "./components/Loader";
+import useSessionStorage from "../src/service/AuthService";
+//import Forgot from "./pages/forgot/Forgot";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const FAQ = lazy(() => import("./pages/faq/Faq"));
 const WaitingArea = lazy(() => import("./pages/waitingarea/WaitingArea"));
 const Login = lazy(() => import("./pages/login/Login"));
+const Forgot = lazy(() => import("./pages/forgot/Forgot"));
+const  Restpassword= lazy(() => import("./pages/restpassword/Restpassword"));
 const Tickets = lazy(() => import("./pages/ticket/Ticket"));
 const Reason = lazy(() => import("./pages/reason/Reason")); 
 const Agent = lazy(() => import("./pages/agent/Agent"));
@@ -12,65 +17,40 @@ const Products = lazy(() => import("./pages/Products"));
 const Transaction = lazy(() => import("./pages/Transaction"));
 const Customers = lazy(() => import("./pages/Customers"));
 const NewProduct = lazy(() => import("./pages/management/NewProduct"));
-const ProductManagement = lazy(
-  () => import("./pages/management/ProductManagement")
-);
-const TransactionManagement = lazy(
-  () => import("./pages/management/TransactionManagement")
-);
-
-const BarCharts = lazy(() => import("./pages/charts/BarCharts"));
-const LineCharts = lazy(() => import("./pages/charts/LineCharts"));
-const PieCharts = lazy(() => import("./pages/charts/PieCharts"));
-
-const Stopwatch = lazy(() => import("./pages/apps/Stopwatch"));
-const Coupon = lazy(() => import("./pages/apps/Coupon"));
-const Toss = lazy(() => import("./pages/apps/Toss"));
+const ProductManagement = lazy(() => import("./pages/management/ProductManagement"));
 
 const App = () => {
+  const { getUser } = useSessionStorage();
+  const [userRole, setUserRole] = useState<string>('');
+
+  useEffect(() => {
+    if (getUser()?.user) {
+      setUserRole(getUser().user);
+    } else {
+      console.log("User role not found or not authenticated.");
+    }
+  }, []); 
+
   return (
     <Router>
       <Suspense fallback={<Loader />}>
         <Routes>
-        <Route path="/" element={<WaitingArea />} />
-
-          {/* <Route
-            path="/"
-            element={
-              <Link to="/admin/dashboard">
-                <button>Visit Dashboard</button>
-              </Link>
-            }
-          /> */}
-
-          <Route path="/admin/login" element={<Login />} />
-          <Route path="/admin/dashboard" element={<Dashboard />} />
-          <Route path="/admin/agent" element={<Agent />} />
-          <Route path="/admin/product" element={<Products />} />
-          <Route path="/admin/customer" element={<Customers />} />
-          <Route path="/admin/transaction" element={<Transaction />} />
+          <Route path="/" element={<WaitingArea />} />
           <Route path="/ticket/reason" element={<Reason />} />
           <Route path="/ticket/ticket" element={<Tickets />} />
+          <Route path="/ticket/faq" element={<FAQ />} />
+          <Route path="/admin/forgot" element={<Forgot />} />
+          <Route path="/admin/login" element={<Login />} />
+          <Route path="/admin/restpassword" element={<Restpassword />} />
 
-          {/* Charts */}
-
-          <Route path="/admin/chart/bar" element={<BarCharts />} />
-          <Route path="/admin/chart/pie" element={<PieCharts />} />
-          <Route path="/admin/chart/line" element={<LineCharts />} />
-
-          {/* Apps */}
-
-          <Route path="/admin/app/stopwatch" element={<Stopwatch />} />
-          <Route path="/admin/app/coupon" element={<Coupon />} />
-          <Route path="/admin/app/toss" element={<Toss />} />
-
-          {/* Management */}
-          <Route path="/admin/product/new" element={<NewProduct />} />
-          <Route path="/admin/product/:id" element={<ProductManagement />} />
-          <Route
-            path="/admin/transaction/:id"
-            element={<TransactionManagement />}
-          />
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/agent" element={<Agent userRole={userRole} />} />
+          <Route path="/admin/user" element={<Products userRole={userRole} />} />
+          <Route path="/admin/customer" element={<Customers userRole={userRole} />} />
+          <Route path="/admin/transaction" element={<Transaction userRole={userRole} />} /> 
+          <Route path="/admin/user/new" element={<NewProduct userRole={userRole} />} />
+          <Route path="/admin/product/:id" element={<ProductManagement userRole={userRole} />} />
+          <Route path="*" element={<WaitingArea />} />
         </Routes>
       </Suspense>
     </Router>

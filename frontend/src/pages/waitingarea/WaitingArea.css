@@ -65,6 +65,7 @@ h2 {
   justify-content: center;
   align-items: center;
   width: 90%;
+  flex-direction: column;
   border-left: 5px solid #004990  ;
   box-shadow: inset -2px -2px 5px #fff, inset 2px 2px 5px rgba(174, 174, 192, 0.6);
 }

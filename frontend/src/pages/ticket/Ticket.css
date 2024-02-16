@@ -1,3 +1,10 @@
+.ticket-container{
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .screen-container {
   text-align: center;
   padding: 20px;
@@ -5,6 +12,10 @@
 
 .header {
   margin-bottom: 40px; 
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 
@@ -27,6 +38,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
 .ticket-number-container {
@@ -35,10 +47,10 @@
 }
 
 .ticket-number {
-  font-size: 32px; 
+  color: #9d8b57;
   font-weight: bolder;
-  color: #A9A9A9; 
-  margin-bottom: 10px; 
+  text-align: center;
+  margin-top: 10px;
 }
 .ticket-number-color{
   color: #004990;

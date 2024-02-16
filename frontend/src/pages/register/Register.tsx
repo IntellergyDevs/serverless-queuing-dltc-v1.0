@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 
 interface Reason {
   Professional_Driving_Permit: boolean;
