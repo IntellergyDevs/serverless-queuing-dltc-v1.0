@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Suspense, lazy, useState,useEffect } from "react";
 import Loader from "./components/Loader";
 import useSessionStorage from "../src/service/AuthService";
-//import Forgot from "./pages/forgot/Forgot";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const FAQ = lazy(() => import("./pages/faq/Faq"));
