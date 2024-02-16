@@ -99,13 +99,17 @@ function Agent({ userRole }: UserRoleProps) {
             }
         };
         setName(sessionData.name)
-        fetchData();
         updateCounters();
-        const intervalId = setInterval(fetchData, 10000); // Fetch every 10 seconds
+        const intervalId = setInterval(() => {
+            fetchData();
+
+        }, 1000); // Fetch every 10 seconds
+        
+
     
         return () => clearInterval(intervalId); // Cleanup interval
+        
     }, []);
-    
     
     
 
@@ -228,9 +232,10 @@ function Agent({ userRole }: UserRoleProps) {
             <AdminSidebar userRole={userRole}/>
                 <main className="dashboard">
                     <div className="bar">
-                        <BsSearch />
-                        <input type="text" placeholder="Search for Ticket " value={searchQuery} onChange={handleSearchChange} />
-                        {searchQuery && (
+                        <div className='search-bar'>
+                            <BsSearch  />
+                            <input type="text" placeholder="Search for Ticket " value={searchQuery} onChange={handleSearchChange} />
+                            {searchQuery && (
                             <div className="list-group">
                                 {filteredTickets.map(ticket => (
                                     <button
@@ -243,24 +248,26 @@ function Agent({ userRole }: UserRoleProps) {
                                 ))}
                             </div>
                         )}
-                        <div className='ticketCounters'>
-                            <p className='ticketCounters-para'>Done: {doneCount}</p>
-                            <p className='ticketCounters-para'>Queue:{qCount} </p>
                         </div>
-<div className='profile'>
-      <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
-        <img src={userImg} alt="User" />
-        <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
-          <a href="#home">About</a>
-          <a href="#home">Settings</a>
-          <a  onClick={handleLogout}>Sign Out</a>
+                        
+                        <div className='ticketCounters'>
+                            <p className='ticketCounters-para'>Done: <span className='done'>{doneCount}</span></p>
+                            <p className='ticketCounters-para'>Queue: <span className='que'>{qCount}</span> </p>
+                        </div>
+                        <div className='profile'>
+                            <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
+                                <img src={userImg} alt="User" />
+                                <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
+                                <a href="#home">About</a>
+                                <a href="#home">Settings</a>
+                                <a  onClick={handleLogout}>Sign Out</a>
 
-          
-        </div>
-      </div>
-      <p>{name}</p>
-    </div>
-        </div>
+                                
+                                </div>
+                            </div>
+                            <p>{name}</p>
+                        </div>
+                    </div>
                     <br />
                     <div className="task-statuses">
                         <span>in Queue</span>

@@ -87,29 +87,90 @@
 
   }
 
-
-  .bar {
-    height: 5rem;
+.bar { 
     width: 60%;
     margin-left: 10%;
     align-items: center;
-    padding-left: 1%;
+    padding: 1%;
     display: flex;
     // flex-direction: column;
+    // border:2px solid red;
+    height: 10rem;
+    justify-content: space-evenly;
+    
 
-    // padding: 0 1rem;
-   
-
-    >input {
-      margin-right: auto;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.37);
-      @include inputStyle(40%, 0 1rem);
-
-      &:focus {
-        border-bottom: 2px solid blue;
-        /* Change the color or style as needed */
+    .search-bar{
+      width: 50%;
+      height: 100%;
+      // display: flex;
+      // flex-direction: column;
+      >input {
+        // margin-right: auto;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.37);
+        @include inputStyle(100%, 0 1rem);
+        &:focus {
+          border-bottom: 2px solid blue;
+          /* Change the color or style as needed */
+        }
       }
+
     }
+    .ticketCounters {
+    
+        --dark-grey: #353535;
+        --middle-grey: #767676;
+        --lightest-grey: linear-gradient(#fafafa,#ebebeb);
+        --shadow: 0 5px 15px 0 #00000026;
+        --shadow-active: 0 5px 5px 0 #00000026;
+        --border-radius-main: 10px;
+        --border-radius-icon: 50px;
+        position: relative;
+        display: flex;
+        text-align: center;
+        width:100%;
+        justify-content: space-evenly;
+        flex-direction: column;
+        align-items: center;
+        cursor: default;
+        color: var(--dark-grey);
+        opacity: .9;
+        margin: auto;
+        padding: 1.5rem;
+        font-weight: 600;
+        background: var(--lightest-grey);
+        max-width: max-content;
+        border-radius: var(--border-radius-main);
+        box-shadow: var(--shadow);
+        transition: .2s ease all;
+        &:focus{
+          box-shadow: var(--shadow-active);
+        }
+
+      >.ticketCounters-para {
+        margin-right: 1%;
+        width: 100%;
+        
+        
+        
+       
+        >span.done{ background-color: green;
+          color: #ddd;
+          border-radius: 10px;
+          padding: 5px;
+          box-shadow: var(--shadow-active);
+
+        }
+        >span.que{ background-color: #ff0000cc;
+          color: #ddd;
+          border-radius: 10px;
+          padding: 5px;
+          box-shadow: var(--shadow-active);
+
+        }
+      }
+
+    }
+    
 
     .profile {
       display: flex;
@@ -166,21 +227,7 @@
       }
     }
     
-    .ticketCounters {
-      display: flex;
-      justify-content: space-around;
-      border: 2px solid red;
-      border-radius: 10px;
-      padding: 1%;
-      align-items: center;
-      width: 20%;
-      margin-top: 1%;
-
-      >.ticketCounters-para {
-        margin-right: 1%;
-      }
-
-    }
+    
 
     >p {
       align-items: center;
