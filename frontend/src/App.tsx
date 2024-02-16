@@ -5,7 +5,7 @@ import useSessionStorage from "../src/service/AuthService";
 // import Faq from "./pages/faq/Faq";
 // 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
-// const Faq = lazy(() => import("./pages/faq/Faq"));
+const Faq = lazy(() => import("./pages/faq/Faq"));
 const WaitingArea = lazy(() => import("./pages/waitingarea/WaitingArea"));
 const Login = lazy(() => import("./pages/login/Login"));
 const Forgot = lazy(() => import("./pages/forgot/Forgot"));
@@ -38,7 +38,7 @@ const App = () => {
           <Route path="/" element={<WaitingArea />} />
           <Route path="/ticket/reason" element={<Reason />} />
           <Route path="/ticket/ticket" element={<Tickets />} />
-          {/* <Route path="/ticket/faq" element={<Faq />} /> */}
+          <Route path="/ticket/faq" element={<Faq />} />
           <Route path="/admin/forgot" element={<Forgot />} />
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin/restpassword" element={<Restpassword />} />
