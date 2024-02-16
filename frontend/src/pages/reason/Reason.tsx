@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+// import { Link, useNavigate } from 'react-router-dom';
 // import Swal from 'sweetalert2';
 import './Reason.css';
 import { sendRequest } from '../../service/Requests';
@@ -101,9 +102,9 @@ const Reason: React.FC<ReasonProps> = () => {
                 <img src="https://dltccoffeeimages.s3.amazonaws.com/new_logo_dltc.png" alt="Logo" className="logo" loading='lazy' />
                 <h1>Smart Licencing</h1>
             </div>
-            <Link to="/ticket/faq" className="create-product-btn">
+            {/* <Link to="/ticket/faq" className="create-product-btn">
                 FAQ
-            </Link>
+            </Link> */}
             <p>Choose from the below options:</p>
             <div className="grid-container">
                 {options.map((option: string, index: number) => (

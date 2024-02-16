@@ -2,8 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Suspense, lazy, useState,useEffect } from "react";
 import Loader from "./components/Loader";
 import useSessionStorage from "../src/service/AuthService";
-import Faq from "./pages/faq/Faq";
-
+// import Faq from "./pages/faq/Faq";
+// 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 // const Faq = lazy(() => import("./pages/faq/Faq"));
 const WaitingArea = lazy(() => import("./pages/waitingarea/WaitingArea"));
@@ -38,11 +38,10 @@ const App = () => {
           <Route path="/" element={<WaitingArea />} />
           <Route path="/ticket/reason" element={<Reason />} />
           <Route path="/ticket/ticket" element={<Tickets />} />
-          <Route path="/ticket/faq" element={<Faq />} />
+          {/* <Route path="/ticket/faq" element={<Faq />} /> */}
           <Route path="/admin/forgot" element={<Forgot />} />
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin/restpassword" element={<Restpassword />} />
-
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/agent" element={<Agent userRole={userRole} />} />
           <Route path="/admin/user" element={<Products userRole={userRole} />} />
