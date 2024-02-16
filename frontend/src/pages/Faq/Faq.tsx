@@ -65,6 +65,11 @@ const FAQ: React.FC<FAQProps> = () => {
         question="Are there any facilities or services while I wait for my turn?"
         answer="Yes, we have seating areas and refreshments available. We also provide informational material about driving safety and regulations while you wait."
       />
+      <FAQItem 
+        question="What if I am experiencing constant 'Internal Sever'?"
+        answer="There my be network problems on your side. Please change your network."
+      />
+
     </div>
     </div>
   );

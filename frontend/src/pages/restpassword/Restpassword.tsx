@@ -11,7 +11,7 @@ function Login() {
   const navigate = useNavigate();
   const { setUserSession } = useSessionStorage();
 
-  const [password, setPassword]= useState<string>('');
+  const []= useState<string>('');
   const [email, setEmail]= useState<string>('');
   const showLoading = function() {
     Swal.fire({
@@ -43,8 +43,8 @@ function Login() {
       }
     }
     const requestBody ={
-      email:email,
-      password:password,  
+      email:email
+      
     }
     showLoading()
     axios.post(loginUrl, requestBody, requestConfig)

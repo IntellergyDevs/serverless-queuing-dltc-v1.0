@@ -15,7 +15,8 @@ interface Ticket {
     datetime: string;
     user: string;
     ticket_number: number;
-    option:any
+    option:any;
+    served_by:string;
 }
 interface UserRoleProps {
     userRole: string;
@@ -30,23 +31,6 @@ function Agent({ userRole }: UserRoleProps) {
     const { resetUserSession } = useSessionStorage();
     const [name, setName] = useState<string>('');
     const [dropdownOpen, setDropdownOpen] = useState(false);
-
-    // const servicesData:any = {
-    //     '250-500': [216.00, 228.00],
-    //     '501-750': [324.00], // Assuming a single value means no range, just a fixed price
-    //     '751-1000': [360.00, 384.00],
-    //     '1001-1250': [400.00, 420.00] // Added as an example, adjust accordingly
-    //   };
-      
-    //   // Function to calculate price based on service (weight range) and schedule
-    //   const calculatePrice = (service: string, schedule: string): number => {
-    //     const prices = servicesData[service];
-    //     if (!prices) return 0; // Return 0 if the service is not found
-      
-    //     // Example logic to select price based on schedule or other conditions
-    //     const price = schedule === 'Morning' ? prices[0] : prices[1] || prices[0];
-    //     return price;
-    //   };
 
     const toggleDropdown = () => {
       setDropdownOpen(!dropdownOpen);
@@ -158,9 +142,10 @@ function Agent({ userRole }: UserRoleProps) {
     };
 
     const handleTicketSelect = (ticket: Ticket): void => {
+        console.log(ticket)
         Swal.fire({
-            title: `Ticket NO ${ticket.ticketNumber}`,
-            html: `<strong>Status:</strong> ${ticket.state}<br/><strong>Description:</strong> ${ticket.user}`,
+            title: `Ticket NO ${ticket.ticket_number}`,
+            html: `<strong>Status:</strong> ${ticket.state}<br/><strong>Description:the Ticket was served for </strong> ${ticket.option}<br/>Ticket Served by : ${ticket.served_by}`,
             icon: 'info',
             confirmButtonText: 'Close'
         });
@@ -227,14 +212,14 @@ function Agent({ userRole }: UserRoleProps) {
 
     const handleReview = (ticketNumber: number): void => {
         Swal.fire({
-            title: 'Review Ticket',
+            title: `Ticket No ${ticketNumber}`,
             text: `Review for Ticket NO ${ticketNumber}`,
             icon: 'info',
             confirmButtonText: 'Done'
         });
     };
 
-    const filteredTickets = tickets.filter(ticket => ticket.ticketNumber && ticket.ticketNumber.toString().includes(searchQuery));
+    const filteredTickets = tickets.filter(ticket => ticket.ticket_number && ticket.ticket_number.toString().includes(searchQuery));
 
     return (
         <>
@@ -253,7 +238,7 @@ function Agent({ userRole }: UserRoleProps) {
                                         className="list-group-item list-group-item-action"
                                         onClick={() => handleTicketSelect(ticket)}
                                     >
-                                        Ticket NO {ticket.ticketNumber}
+                                        Ticket No {ticket.ticket_number}
                                     </button>
                                 ))}
                             </div>
