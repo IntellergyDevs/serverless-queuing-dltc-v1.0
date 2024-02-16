@@ -117,34 +117,18 @@ const dashboard = () => {
       <AdminSidebar userRole={userRole}/>
       <main className="dashboard">
         <div className="bar">
-          <BsSearch />
-          <input type="text" placeholder="Search for User " value={searchQuery} onChange={handleSearchChange} />
-          {searchQuery && (
-            <div className="list-group">
-              {filteredTickets.map(ticket => (
-                <button
-                  key={ticket.ticket_number}
-                  className="list-group-item list-group-item-action"
-                  onClick={() => handleTicketSelect(ticket)}
-                >
-                  Ticket NO {ticket.ticketNumber}
-                </button>
-              ))}
-            </div>
-          )}
-          
-<div className='profile'>
-      <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
-        <img src={userImg} alt="User" />
-        <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
-          <a >About</a>
-          <a >Settings</a>
-          <a  onClick={handleLogout}>Sign Out</a>          
-        </div>
-      </div>
-      <p>{name}</p>
-    </div>
-        </div>
+          <div className='profile'>
+                <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
+                  <img src={userImg} alt="User" />
+                  <div className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
+                    <a >About</a>
+                    <a >Settings</a>
+                    <a  onClick={handleLogout}>Sign Out</a>          
+                  </div>
+                </div>
+                <p>{name}</p>
+          </div>
+          </div>
         <section className="widget-container">
           <WidgetItem
             percent={ticketCount / 100}
