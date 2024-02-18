@@ -105,12 +105,17 @@ function Login() {
       <input type="password" className="form-control item" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required/>
     </div>
     <div className="form-group">
+      <input type="checkbox" className="form-control item" id="tandc"  placeholder="Termd and Conditions" required/>
+      <a href='#'>  Terms and Conditions</a>
+    </div>
+    <div className="form-group">
       <input type="submit" className="btn btn-block create-account" value="Login" />
     </div>
-    </form>
     <div className="form-group"><br/>
       <button className="btn forgot-password" onClick={handleForgotPassword}>Forgot Password?</button>
     </div>
+    </form>
+    
 
 </div>
 
