@@ -1,11 +1,11 @@
 // babel.config.js
 module.exports = {
   presets: [
-    "@babel/preset-env",
-    "@babel/preset-react" // This preset is necessary for JSX transformation
+    "@babel/preset-env"
+    // Do not add "@babel/preset-react" if you want to leave the configuration as-is
   ],
-  // If you're using any plugins, they would go here
   plugins: [
-    // If you have custom Babel plugins, they would be listed here
+    "@babel/plugin-syntax-jsx" // Add this line to enable JSX parsing
+    // ... any other plugins you are using
   ]
 };
