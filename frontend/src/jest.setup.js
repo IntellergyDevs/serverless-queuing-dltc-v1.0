@@ -1,5 +1,7 @@
 
-// jest.setup.js
+// jest.setup.js// jest.setup.js
+import '@testing-library/jest-dom';
+
 // Add any global setup, for example with jest-extended or enzyme, etc.
 
 // Example of extending expect with jest-extended
@@ -18,5 +20,6 @@ module.exports = {
     transform: {
       "^.+\\.[t|j]sx?$": "babel-jest",
     },
+    setupFilesAfterEnv: ['<rootDir>/path/to/your/jest.setup.js'],
   };
   
