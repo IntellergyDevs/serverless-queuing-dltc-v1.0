@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test":"npm run test:unit",
+    "test:test": "vite test",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -26,7 +26,8 @@
     "react-table": "^7.8.0",
     "sass": "^1.66.1",
     "sweetalert2": "^11.10.4",
-    "sweetalert2-react-content": "^5.0.7"
+    "sweetalert2-react-content": "^5.0.7",
+    "vite-test-utils-edge": "^0.6.0-28376470.1485179"
   },
   "devDependencies": {
     "@types/nodemailer": "^6.4.14",
