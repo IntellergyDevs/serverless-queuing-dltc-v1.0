@@ -12,3 +12,11 @@ require('jest-extended');
 // Enzyme.configure({ adapter: new Adapter() });
 
 // You can add any global setup you need for Jest here.
+// jest.config.js
+module.exports = {
+    // ... other configurations
+    transform: {
+      "^.+\\.[t|j]sx?$": "babel-jest",
+    },
+  };
+  
