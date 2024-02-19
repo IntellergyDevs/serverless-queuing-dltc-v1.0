@@ -43,13 +43,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install dependencies for SonarQube analysis
+        run: npm install --global sonarqube-scanner
+
       - name: Set up SonarQube scan
-        uses: SonarSource/sonarcloud-github-action@v1
-        with:
-          projectBaseDir: ./frontend # Set this to the root directory of your project if different
+        run: sonarqube-scanner
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub, no need to create a secret
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Your SonarQube token stored as a secret
+          SONAR_HOST_URL: 'http://localhost:9001/' # Adjust this to your SonarQube server URL
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub, no need to create a secret
+          
 
   deploy-staging:
     runs-on: ubuntu-latest
