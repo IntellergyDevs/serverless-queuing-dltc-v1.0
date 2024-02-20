@@ -1,7 +1,7 @@
 module.exports = {
     testMatch: [
       // '<rootDir>/src/**/*.test.js',
-      'DEMO/*test.jsx',
+      'demo/*test.jsx',
     ],
     setupFiles: ['<rootDir>/jest.setup.js'], // Example: You can specify setup files
     moduleNameMapper: {
