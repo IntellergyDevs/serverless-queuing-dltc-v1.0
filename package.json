@@ -2,23 +2,26 @@
   "name": "demo",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "dev": "vite",
+    "start": "node app.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "build": "vite build",
-    "lint": "eslint . --ext .js,.jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "start": "node app.js"
+    "lint": "eslint . --ext .js,.jsx --report-unused-disable-directives --max-warnings 0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "vite": "^2.7.2"
-  },
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.45.0",
+    "@types/jest": "^29.7.0",
+    "@types/node": "^18.0.0",
+    "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-react-hooks": "^4.6.0"
+    
   }
 }
