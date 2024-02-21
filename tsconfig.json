@@ -1,14 +1,11 @@
-// {
-//   "compilerOptions": {
-//     "target": "ES5",
-//     "module": "commonjs",
-//     "outDir": "./dist",
-//     "strict": true
-//   },
-//   "include": [
-//     "./src/**/*.ts" // Adjust this pattern based on your project structure
-//   ],
-//   "exclude": [
-//     "node_modules"
-//   ]
-// }
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "strict": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
