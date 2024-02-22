@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - dev
+      - 'flask-demo-app/**/*'  # Updated to include pull requests targeting the 'flask-demo-app' folder
 
 jobs:
   build:
@@ -49,8 +50,8 @@ jobs:
 
       - name: Run script and tests
         run: |
-          python app.py
-          python test_script.py
+          python flask-demo-app/app.py  # Adjust the path accordingly
+          python flask-demo-app/test_script.py  # Adjust the path accordingly
 
   sonarqube-scan:
     runs-on: ubuntu-latest
@@ -79,6 +80,7 @@ jobs:
       - name: Deploy to Staging
         run: |
           # Your actual staging deployment commands here
+          echo "Deploying to Staging"
 
   deploy-prod:
     runs-on: ubuntu-latest
@@ -88,3 +90,4 @@ jobs:
       - name: Deploy to Production
         run: |
           # Your actual production deployment commands here
+          echo "Deploying to Production"
