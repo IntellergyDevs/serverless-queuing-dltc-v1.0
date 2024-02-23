@@ -31,7 +31,7 @@ jobs:
         run: |
           python flask-demo-app/test_script.py
 
-  sonarqube-scan:
+  sonarcloud-scan:
     runs-on: ubuntu-latest
     needs: build
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')
@@ -45,7 +45,7 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
-      - name: SonarQube Scan
+      - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -54,7 +54,7 @@ jobs:
 
   deploy-staging:
     runs-on: ubuntu-latest
-    needs: sonarqube-scan
+    needs: sonarcloud-scan
     steps:
       - name: Deploy to Staging
         run: |
