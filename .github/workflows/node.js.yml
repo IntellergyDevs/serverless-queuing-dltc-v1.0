@@ -50,7 +50,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.squ_5e2552514c24f037df63cadf8091ab2b4c3d0411 }}
           SONAR_TOKEN: ${{ secrets.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 }}
-          SONAR_HOST_URL: ${{ secrets.http://localhost:9001/ }}
+          SONAR_HOST_URL: ${{ secrets.http://localhost:9001}}
 
   deploy-staging:
     runs-on: ubuntu-latest
