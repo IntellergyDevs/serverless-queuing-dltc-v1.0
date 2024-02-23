@@ -48,9 +48,9 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          GITHUB_TOKEN: ${{ secrets.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}}
+          SONAR_TOKEN: ${{ secrets.sqp_c60e62ddf8a4026e05b2c6f44c3529c7d55ccbfd }}
+          SONAR_HOST_URL: ${{ secrets.sonarcloud.io }}
 
   deploy-staging:
     runs-on: ubuntu-latest
