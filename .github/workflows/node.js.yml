@@ -8,7 +8,7 @@ on:
   pull_request:
     branches:
       - dev
-      - 'flask-demo-app/**/*'  # Updated to include pull requests targeting the 'flask-demo-app' folder
+      - 'flask-demo-app/**/*'
 
 jobs:
   build:
@@ -25,11 +25,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r flask-demo-app/requirements.txt  # Assuming you have requirements.txt inside the flask-demo-app folder
+          pip install -r flask-demo-app/requirements.txt
 
       - name: Build and test with coverage
         run: |
-          python flask-demo-app/test_script.py  # Adjust the path accordingly
+          python flask-demo-app/test_script.py
 
   sonarqube-scan:
     runs-on: ubuntu-latest
@@ -39,20 +39,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install SonarScanner and Java
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openjdk-11-jre
-          sudo wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-          sudo unzip sonar-scanner-cli-4.6.2.2472-linux.zip -d /opt
-          echo 'export PATH=$PATH:/opt/sonar-scanner-cli-4.6.2.2472-linux/bin' >> $GITHUB_ENV
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
 
-      - name: Run SonarQube scan
-        run: sonar-scanner
+      - name: SonarQube Scan
+        uses: SonarSource/sonarcloud-github-action@v2
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.squ_5e2552514c24f037df63cadf8091ab2b4c3d0411 }}
+          SONAR_TOKEN: ${{ secrets.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 }}
+          SONAR_HOST_URL: ${{ secrets.http://localhost:9001/ }}
 
   deploy-staging:
     runs-on: ubuntu-latest
