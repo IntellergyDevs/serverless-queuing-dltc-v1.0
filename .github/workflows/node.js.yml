@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Python CI/CD
 
 on:
   push:
@@ -11,29 +11,8 @@ on:
       - 'flask-demo-app/**/*'
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install Node.js dependencies
-        run: npm install
-
-      - name: Build and test with coverage
-        run: npm run build --if-present && npm run test:coverage
-
-  python-test:
-    runs-on: ubuntu-latest
-    needs: build-and-test
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -43,46 +22,53 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r FLASH-DEMO-APP/requirements.txt
+          pip install -r flask-demo-app/requirements.txt
 
-      - name: Run Python script and tests
+      - name: Build and test with coverage
         run: |
-          python FLASH-DEMO-APP/app.py
-          python FLASH-DEMO-APP/test_script.py
+          python flask-demo-app/test_script.py
 
-  sonarqube-scan:
+  sonarcloud-scan:
     runs-on: ubuntu-latest
-    needs: python-test
+    needs: build
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')
     steps:
-      - name: Install SonarScanner
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openjdk-11-jre
-          sudo wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-          sudo unzip sonar-scanner-cli-4.6.2.2472-linux.zip -d /opt
-          echo 'export PATH=$PATH:/opt/sonar-scanner-cli-4.6.2.2472-linux/bin' >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Run SonarQube scan
-        run: sonar-scanner
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectBaseDir: ./flask-demo-app
+          args: -Dsonar.verbose=true
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy-staging:
     runs-on: ubuntu-latest
-    needs: sonarqube-scan
+    needs: sonarcloud-scan
     steps:
       - name: Deploy to Staging
-        run: echo "Deploying to Staging"
+        run: |
+          # Your actual staging deployment commands here
+          echo "Deploying to Staging"
 
   deploy-prod:
     runs-on: ubuntu-latest
     needs: deploy-staging
     steps:
       - name: Deploy to Production
-        run: echo "Deploying to Production"
+        run: |
+          # Your actual production deployment commands here
+          echo "Deploying to Production"
