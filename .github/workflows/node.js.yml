@@ -78,15 +78,19 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        working-directory: infra  # Set the working directory
 
       - name: Terraform Format
         run: terraform fmt -check
+        working-directory: infra  # Set the working directory
 
       - name: Terraform Validate
         run: terraform validate
+        working-directory: infra  # Set the working directory
 
       - name: Terraform Plan
         run: terraform plan
+        working-directory: infra  # Set the working directory
 
   deploy-staging:
     runs-on: ubuntu-latest
