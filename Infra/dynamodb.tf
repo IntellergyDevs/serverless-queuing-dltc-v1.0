@@ -1,4 +1,4 @@
-
+############
 # DynamoDB Table: TicketManage
 
 resource "aws_dynamodb_table" "ticket_table" {
