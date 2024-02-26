@@ -1,4 +1,4 @@
-#########################// to store the state file in s3
+#############################// to store the state file in s3
 
 terraform {
   backend "s3" {
