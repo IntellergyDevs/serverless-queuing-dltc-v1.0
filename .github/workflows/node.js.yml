@@ -62,7 +62,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: sonarcloud-scan
     steps:
+      - name: Manual Approval
+        if: github.event_name == 'workflow_run' && github.event.workflow == 'Python CI/CD' && github.event.workflow_run.event == 'workflow_run'
+        run: |
+          echo "Waiting for manual approval to deploy to staging..."
+          # You can customize this step to notify someone for approval
+          # or include a manual confirmation process.
+
       - name: Deploy to Staging
+        if: github.event_name == 'workflow_run' && github.event.workflow == 'Python CI/CD' && github.event.workflow_run.event == 'workflow_run'
         run: |
           # Your actual staging deployment commands here
           echo "Deploying to Staging"
