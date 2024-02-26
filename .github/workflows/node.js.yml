@@ -65,7 +65,7 @@ jobs:
       AWS_DEFAULT_REGION: 'us-east-1' # Replace with your AWS region
     defaults:
       run:
-       working-directory: infra
+       working-directory: infra/
     steps:
       - name: Checkout Terraform code
         uses: actions/checkout@v2
