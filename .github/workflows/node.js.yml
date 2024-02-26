@@ -6,13 +6,15 @@ on:
       - dev
       - main
     paths:
-      - 'flask-demo-app/**/*'
       - 'infra/**/*'
+      - 'flask-demo-app/**/*'
+     
   pull_request:
     branches:
       - main
+       - 'infra/**/*'
       - 'flask-demo-app/**/*'
-      - 'infra/**/*'
+      
 
 jobs:
   build:
