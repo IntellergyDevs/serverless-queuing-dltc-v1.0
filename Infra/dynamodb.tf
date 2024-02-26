@@ -1,6 +1,6 @@
 ################
 # DynamoDB Table: TicketManage
-################
+
 resource "aws_dynamodb_table" "ticket_table" {
   name         = "TicketManage"
   billing_mode = "PAY_PER_REQUEST"
