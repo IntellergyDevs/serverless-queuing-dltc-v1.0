@@ -1,6 +1,5 @@
 ##############
 # API Gateway#
-##############
 // APIs for list and store
 
 resource "aws_api_gateway_rest_api" "user_apigw" {
