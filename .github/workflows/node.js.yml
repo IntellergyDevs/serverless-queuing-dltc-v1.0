@@ -63,28 +63,40 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: 'us-east-1' # Replace with your AWS region
-    defaults:
-      run:
-       working-directory: infra/
     steps:
       - name: Checkout Terraform code
         uses: actions/checkout@v2
+        with:
+          path: 'infra' # Sets the path for the checkout
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.2
           terraform_wrapper: false
+        # No need to set working-directory for setup-terraform
+
       - name: Terraform Init
         run: terraform init
+        working-directory: ./infra # Set the working directory to the 'infra' folder
+
       - name: Terraform Format
         run: terraform fmt -check
+        working-directory: ./infra # Set the working directory to the 'infra' folder
+
       - name: Terraform Validate
         run: terraform validate
+        working-directory: ./infra # Set the working directory to the 'infra' folder
+
       - name: Terraform Plan
         run: terraform plan -no-color
+        working-directory: ./infra # Set the working directory to the 'infra' folder
+
       # Uncomment the following line if you want to automatically apply the changes
       # - name: Terraform Apply
       #   run: terraform apply -auto-approve
+      #   working-directory: ./infra # Set the working directory to the 'infra' folder
+
 
   deploy-staging:
     runs-on: ubuntu-latest
