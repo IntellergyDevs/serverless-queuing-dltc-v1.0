@@ -5,9 +5,6 @@ on:
     branches:
       - dev
       - main
-    paths:
-      - 'infra/**'
-      - 'flask-demo-app/**'
   pull_request:
     branches:
       - main
