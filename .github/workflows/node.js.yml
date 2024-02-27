@@ -65,7 +65,7 @@ jobs:
       - name: List files in the directory
         run: ls -R
       - name: Change to Infra directory
-        run: cd infra
+        run: cd infra/**
 
   terraform:
     runs-on: ubuntu-latest
