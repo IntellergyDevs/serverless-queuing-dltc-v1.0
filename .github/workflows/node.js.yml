@@ -10,7 +10,7 @@ on:
       - main
     paths:
       - 'flask-demo-app/**'
-      - 'infra/**'
+      - 'Infra/**'
 
 jobs:
   build:
@@ -65,7 +65,7 @@ jobs:
       - name: List files in the directory
         run: ls -R
       - name: Change to Infra directory
-        run: cd infra
+        run: cd Infra
 
   terraform:
     runs-on: ubuntu-latest
@@ -80,19 +80,19 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: infra
+        working-directory: Infra
 
       - name: Terraform Format
         run: terraform fmt -check
-        working-directory: infra
+        working-directory: Infra
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: infra
+        working-directory: Infra
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: infra
+        working-directory: Infra
 
   deploy-staging:
     runs-on: ubuntu-latest
