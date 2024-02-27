@@ -54,6 +54,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+          ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
 
   terraform:
     runs-on: ubuntu-latest
@@ -72,7 +74,7 @@ jobs:
         run: terraform init
         working-directory: ./Infra
 
-      - name: Terraform Format
+      - name: Terraform Format Check
         run: terraform fmt -check
         working-directory: ./Infra
 
