@@ -55,24 +55,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  change-to-infra-directory:
+  terraform:
     runs-on: ubuntu-latest
     needs: sonarcloud-scan
     if: (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'infra')) || github.ref == 'refs/heads/dev'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: List files in the directory
-        run: ls -R
-      - name: Change to Infra directory
-        run: cd Infra
 
-  terraform:
-    runs-on: ubuntu-latest
-    needs: change-to-infra-directory
-    steps:
-      - name: List files in the directory
-        run: ls -R
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -80,19 +70,19 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: Infra
+        working-directory: ./Infra
 
       - name: Terraform Format
         run: terraform fmt -check
-        working-directory: Infra
+        working-directory: ./Infra
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: Infra
+        working-directory: ./Infra
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: Infra
+        working-directory: ./Infra
 
   deploy-staging:
     runs-on: ubuntu-latest
