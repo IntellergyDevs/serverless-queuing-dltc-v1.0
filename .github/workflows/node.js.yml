@@ -57,7 +57,7 @@ jobs:
   change-to-infra-directory:
     runs-on: ubuntu-latest
     needs: sonarcloud-scan
-    if: github.ref == 'refs/heads/main' && (contains(github.event.head_commit.message, 'infra') || github.ref == 'refs/heads/dev')
+    if: (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'infra')) || github.ref == 'refs/heads/dev'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -75,19 +75,19 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: infra  # Set the working directory
+        working-directory: infra
 
       - name: Terraform Format
         run: terraform fmt -check
-        working-directory: infra  # Set the working directory
+        working-directory: infra
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: infra  # Set the working directory
+        working-directory: infra
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: infra  # Set the working directory
+        working-directory: infra
 
   deploy-staging:
     runs-on: ubuntu-latest
