@@ -60,8 +60,8 @@ jobs:
     needs: sonarcloud-scan
     if: (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'infra')) || github.ref == 'refs/heads/dev'
     env:
-      SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-      ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }} # Corrected environment variable name
+      AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }} # Corrected environment variable name
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -74,6 +74,8 @@ jobs:
       - name: Terraform Init
         run: terraform init
         working-directory: ./Infra
+        env:
+          AWS_DEFAULT_REGION: 'us-east-1' # Optionally, specify default AWS region
 
       - name: Terraform Format Check
         run: terraform fmt -check
