@@ -2,7 +2,7 @@
 
 terraform {
   backend "s3" {
-    bucket = "qtdevtest"
+    bucket = "terrafrom-state-sonar"
     key    = "terraform/backend.tf"
     region = "us-east-1"
   }
