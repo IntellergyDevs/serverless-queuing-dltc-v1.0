@@ -45,9 +45,11 @@ jobs:
         uses: SonarSource/sonar-scanner-action@4.7.1
 
       - name: SonarQube Scan
-        run: sonar-scanner \
-            -Dsonar.host.url=http://35.153.18.35:9000/ \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        run: |
+          cd ./flask-demo-app
+          sonar-scanner -Dsonar.host.url=http://35.153.18.35:9000/ -Dsonar.login=$SONAR_TOKEN
+        env:
+          SONAR_SCANNER_OPTS: -Xmx512m
 
   terraform:
     runs-on: ubuntu-latest
@@ -69,7 +71,7 @@ jobs:
         run: terraform init
         working-directory: ./Infra
         env:
-          AWS_DEFAULT_REGION: 'us-east-1' # Optionally, specify default AWS region
+          AWS_DEFAULT_REGION: 'us-east-1' # Optionally, specify the default AWS region
 
       - name: Terraform Format Check
         run: terraform fmt -check
