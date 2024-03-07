@@ -41,15 +41,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Java
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
+      - name: Set up SonarScanner
+        uses: SonarSource/sonar-scanner-cli@v3
 
       - name: SonarQube Scan
-        run: |
-          mvn sonar:sonar \
+        run: sonar-scanner \
             -Dsonar.host.url=http://35.153.18.35:9000/ \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
