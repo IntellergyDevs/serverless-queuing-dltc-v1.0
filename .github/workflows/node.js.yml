@@ -42,7 +42,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up SonarScanner
-        uses: SonarSource/sonar-scanner-cli@4.7.1
+        uses: SonarSource/sonar-scanner-cli@master  # Use the latest version available
 
       - name: SonarQube Scan
         run: |
