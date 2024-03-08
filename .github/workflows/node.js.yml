@@ -28,9 +28,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r flask-demo-app/requirements.txt
+
       - name: Build and test with coverage
         run: |
           python flask-demo-app/test_script.py
+
   sonarqube-scan:
     runs-on: ubuntu-latest
     needs: build
@@ -40,7 +42,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up SonarScanner
-        uses: SonarSource/sonar-scanner-cli@4.6.2.2472
+        uses: SonarSource/sonar-scanner-cli@master # Use 'master' for the latest version
 
       - name: SonarQube Scan
         run: |
@@ -54,8 +56,8 @@ jobs:
     needs: sonarqube-scan
     if: (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'infra')) || github.ref == 'refs/heads/dev'
     env:
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }} # Corrected environment variable name
-      AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }} # Corrected environment variable name
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -69,7 +71,7 @@ jobs:
         run: terraform init
         working-directory: ./Infra
         env:
-          AWS_DEFAULT_REGION: 'us-east-1' # Optionally, specify default AWS region
+          AWS_DEFAULT_REGION: 'us-east-1' # Optionally, specify the default AWS region
 
       - name: Terraform Format Check
         run: terraform fmt -check
