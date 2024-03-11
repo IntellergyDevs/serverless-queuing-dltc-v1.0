@@ -48,7 +48,7 @@ jobs:
           java-version: '11'
 
       - name: Extract SonarScanner
-        run: unzip /home/ec2-user/sonar-scanner-cli-4.6.2.2472-linux.zip -d /home/ec2-user/
+        run: unzip /home/ec2-user/scanner/sonar-scanner-cli-4.6.2.2472-linux.zip -d /home/ec2-user/scanner
 
       - name: Set up SonarScanner
         run: echo 'export PATH=$PATH:/home/ec2-user/sonar-scanner-cli-4.6.2.2472-linux/bin' >> $GITHUB_ENV
